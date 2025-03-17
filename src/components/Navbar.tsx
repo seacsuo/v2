@@ -1,27 +1,31 @@
-// app/components/Navbar.tsx
+"use client";
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import { ModeToggle } from "@/components/mode-toggle";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-800 text-white p-4">
+    <Card className="rounded-none ">
       <div className="container mx-auto flex justify-between">
         <h1 className="text-xl font-bold">MySite</h1>
-        <ul className="flex space-x-4">
-          <li>
+        <div className="flex gap-4  items-center">
+          <Button variant="link">
             <Link href="/">Home</Link>
-          </li>
-          <li>
+          </Button>
+          <Button variant="link">
             <Link href="/about">About</Link>
-          </li>
-          <li>
+          </Button>
+          <Button variant="link">
             <Link href="/events">Events</Link>
-          </li>
-          <li>
+          </Button>
+          <Button variant="link">
             <Link href="/contact">Contact</Link>
-          </li>
-        </ul>
+          </Button>
+          <ModeToggle />
+        </div>
       </div>
-    </nav>
+    </Card>
   );
 };
 
