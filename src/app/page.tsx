@@ -11,24 +11,6 @@ import Link from "next/link";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
-const links: { icon: string; href: string; label: string }[] = [
-  {
-    icon: "/icons/instagram-svgrepo-com.svg",
-    href: "https://www.instagram.com/seac.suo/",
-    label: "Instagram",
-  },
-  {
-    icon: "/icons/mail-svgrepo-com.svg",
-    href: "mailto:seac.suo@gmail.com",
-    label: "Mail",
-  },
-  {
-    icon: "/icons/linkedin-linked-in-svgrepo-com.svg",
-    href: "https://www.linkedin.com/in/southeast-asian-club-seac-980a43331/",
-    label: "Linked In",
-  },
-];
-
 export default function HomePage() {
   return (
     <>
