@@ -5,7 +5,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="container mx-auto flex flex-col items-center gap-4">
       <Card className="container mx-auto">

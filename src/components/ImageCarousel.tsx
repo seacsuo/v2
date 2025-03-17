@@ -8,7 +8,6 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 
 const ImageCarousel = () => {
   const [images, setImages] = useState<string[]>([]);
