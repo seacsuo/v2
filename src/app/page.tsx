@@ -1,4 +1,3 @@
-import ImageCarousel from "@/components/ImageCarousel";
 import {
   Card,
   CardDescription,
