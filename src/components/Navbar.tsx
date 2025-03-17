@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import {
   Sheet,
   SheetContent,
   SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
@@ -38,10 +39,11 @@ const Navbar = () => {
             <div className="hidden gap-4 items-center lg:flex">
               {links.map((link) => (
                 <Button
+                  asChild
                   key={link.href}
                   variant={pathname === link.href ? "link" : "ghost"} // Highlight active link
                   className={cn(
-                    "text-sm",
+                    "text-md",
                     pathname === link.href && "font-bold text-primary underline"
                   )}
                 >
@@ -53,12 +55,13 @@ const Navbar = () => {
             {/* Links for mobile */}
             <Sheet>
               <SheetTrigger className="flex items-center">
-                <Button size={"icon"} variant="outline">
+                <div className="p-2 rounded-lg items-center border">
                   <Menu />
-                </Button>
+                </div>
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader className="flex items-center gap-4">
+                  <SheetTitle></SheetTitle>
                   <Image
                     src={seacIcon}
                     width={100}
@@ -69,10 +72,11 @@ const Navbar = () => {
                 <div className="flex flex-col gap-4 w-1/2 mx-auto justify-center">
                   {links.map((link) => (
                     <Button
+                      asChild
                       key={link.href}
                       variant={pathname === link.href ? "link" : "ghost"} // Highlight active link
                       className={cn(
-                        "text-sm",
+                        "text-md",
                         pathname === link.href &&
                           "font-bold text-primary underline"
                       )}
