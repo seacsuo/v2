@@ -27,28 +27,32 @@ const Navbar = () => {
 
   return (
     <div>
-      <Card className="rounded-none py-4 fixed top-0 w-full z-10">
+      <Card className="rounded-none py-4 fixed top-0 w-full z-10 px-10">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center flex-row gap-4">
             <Image src={seacIcon} width={50} height={50} alt="SEAC Logo" />
-            <CardTitle className="text-3xl">SEAC</CardTitle>
+            <CardTitle className="text-3xl font-extralight">SEAC</CardTitle>
           </div>
           <div className="flex gap-4 items-center">
-            {links.map((link) => (
-              <Button
-                key={link.href}
-                variant={pathname === link.href ? "link" : "ghost"} // Highlight active link
-                className={cn(
-                  "text-sm",
-                  pathname === link.href && "font-bold text-primary underline"
-                )}
-              >
-                <Link href={link.href}>{link.label}</Link>
-              </Button>
-            ))}
+            {/* Links for desktop */}
+            <div className="hidden gap-4 items-center lg:flex">
+              {links.map((link) => (
+                <Button
+                  key={link.href}
+                  variant={pathname === link.href ? "link" : "ghost"} // Highlight active link
+                  className={cn(
+                    "text-sm",
+                    pathname === link.href && "font-bold text-primary underline"
+                  )}
+                >
+                  <Link href={link.href}>{link.label}</Link>
+                </Button>
+              ))}
+            </div>
             <ModeToggle />
+            {/* Links for mobile */}
             <Sheet>
-              <SheetTrigger>
+              <SheetTrigger className="flex items-center">
                 <Button size={"icon"} variant="outline">
                   <Menu />
                 </Button>
