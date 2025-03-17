@@ -12,6 +12,7 @@ import seacLogo from "@/app/icon.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { SquareArrowOutUpRight } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -41,7 +42,7 @@ export default function HomePage() {
         </div>
       </div>
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-0 lg:gap-4 my-10 gap-y-4">
-        <Card className="mx-4">
+        <Card className="mx-4 h-auto lg:h-96">
           <CardHeader>
             <CardTitle className="text-center lg:text-6xl text-2xl">
               About SEAC
@@ -54,38 +55,43 @@ export default function HomePage() {
               and enriching Southeast Asian experience for all students to
               enjoy!
             </CardDescription>
-            <CardFooter className="flex items-center gap-4 justify-center">
-              <Button asChild size="lg" variant={"default"}>
-                <Link href="/about">Learn More</Link>
-              </Button>
-              <Button asChild size="lg" variant={"default"}>
-                <Link href="/events">Merch</Link>
-              </Button>
-            </CardFooter>
           </CardHeader>
+          <CardFooter className="flex items-center gap-4 justify-center">
+            <Link href="/about">
+              <Button size="lg" variant={"default"}>
+                Learn More
+                <SquareArrowOutUpRight />
+              </Button>
+            </Link>
+            <Link href="/events">
+              <Button size="lg" variant={"default"}>
+                Merch
+                <SquareArrowOutUpRight />
+              </Button>
+            </Link>
+          </CardFooter>
         </Card>
-        <Card className="mx-4">
+        <Card className="mx-4 h-auto lg:h-96 ">
           <CardHeader>
             <CardTitle className="text-center lg:text-6xl text-2xl">
-              About SEAC
+              SEAC In Kelowna
             </CardTitle>
             <CardDescription className="text-center lg:text-2xl text-lg">
-              South East Asian Club (SEAC) is a part of Student Union Okanagan
-              (SUO) at UBC Okanagan. Our mission is to create a vibrant and
-              inclusive community that celebrates, shares, and promotes the rich
-              cultural heritage of Southeast Asia, while fostering an immersive
-              and enriching Southeast Asian experience for all students to
-              enjoy!
+              Kelowna is a city located in the Okanagan Valley in the province
+              of British Columbia, Canada. It is a city known for its beautiful
+              landscapes, wineries, and outdoor activities. In Kelowna, you can
+              find many Southeast Asian restaurants, shops, and cultural events
+              that promotes the diverse cultures of Southeast Asia.
             </CardDescription>
-            <CardFooter className="flex items-center gap-4 justify-center">
-              <Button asChild size="lg" variant={"default"}>
-                <Link href="/about">Learn More</Link>
-              </Button>
-              <Button asChild size="lg" variant={"default"}>
-                <Link href="/events">Merch</Link>
-              </Button>
-            </CardFooter>
           </CardHeader>
+          <CardFooter className="flex items-center gap-4 justify-center">
+            <Link href="/about">
+              <Button size="lg" variant={"default"}>
+                Learn More
+                <SquareArrowOutUpRight />
+              </Button>
+            </Link>
+          </CardFooter>
         </Card>
       </div>
     </>
