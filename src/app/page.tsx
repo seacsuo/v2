@@ -32,14 +32,14 @@ export default function HomePage() {
               <CardDescription className="lg:text-2xl text-lg">
                 A club that celebrates the diverse cultures of South East Asia.
               </CardDescription>
-              <CardFooter className="flex justify-center ">
-                <Link href="/events">
-                  <Button size="lg" variant={"default"}>
-                    Join Our Next Event
-                  </Button>
-                </Link>
-              </CardFooter>
             </CardHeader>
+            <CardFooter className="flex justify-center ">
+              <Link href="/events">
+                <Button size="lg" variant={"default"}>
+                  Join Our Next Event
+                </Button>
+              </Link>
+            </CardFooter>
           </Card>
         </div>
       </div>
