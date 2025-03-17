@@ -19,15 +19,15 @@ const Navbar = () => {
   return (
     <Card className="rounded-none">
       <div className="container mx-auto flex justify-between items-center py-2">
-        <h1 className="text-xl font-bold">MySite</h1>
+        <h1 className="text-xl font-bold">SEAC</h1>
         <div className="flex gap-4 items-center">
           {links.map((link) => (
             <Button
               key={link.href}
-              variant={pathname === link.href ? "default" : "ghost"} // Highlight active link
+              variant={pathname === link.href ? "link" : "ghost"} // Highlight active link
               className={cn(
                 "text-sm",
-                pathname === link.href && "font-bold text-primary"
+                pathname === link.href && "font-bold text-primary underline"
               )}
             >
               <Link href={link.href}>{link.label}</Link>
