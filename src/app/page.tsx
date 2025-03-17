@@ -33,9 +33,11 @@ export default function HomePage() {
                 A club that celebrates the diverse cultures of South East Asia.
               </CardDescription>
               <CardFooter className="flex justify-center ">
-                <Button size="lg" variant={"default"}>
-                  Join Us
-                </Button>
+                <Link href="/events">
+                  <Button size="lg" variant={"default"}>
+                    Join Our Next Event
+                  </Button>
+                </Link>
               </CardFooter>
             </CardHeader>
           </Card>
