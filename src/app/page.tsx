@@ -1,6 +1,5 @@
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -8,10 +7,8 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import preciousmemoriesvietnam from "@public/landing/preciousmemoriesvietnam.jpg";
-import seacLogo from "@/app/icon.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { SquareArrowOutUpRight } from "lucide-react";
 
 export default function HomePage() {
