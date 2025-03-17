@@ -44,7 +44,7 @@ const Navbar = () => {
                   variant={pathname === link.href ? "link" : "ghost"} // Highlight active link
                   className={cn(
                     "text-md",
-                    pathname === link.href && "font-bold text-primary underline"
+                    pathname === link.href && "font-bold underline"
                   )}
                 >
                   <Link href={link.href}>{link.label}</Link>
@@ -55,7 +55,7 @@ const Navbar = () => {
             {/* Links for mobile */}
             <Sheet>
               <SheetTrigger className="flex items-center">
-                <div className="p-2 rounded-lg items-center border">
+                <div className="p-2 rounded-lg items-center border bg-primary">
                   <Menu />
                 </div>
               </SheetTrigger>
@@ -77,8 +77,7 @@ const Navbar = () => {
                       variant={pathname === link.href ? "link" : "ghost"} // Highlight active link
                       className={cn(
                         "text-md",
-                        pathname === link.href &&
-                          "font-bold text-primary underline"
+                        pathname === link.href && "font-bold underline"
                       )}
                     >
                       <Link href={link.href}>{link.label}</Link>
