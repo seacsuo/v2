@@ -17,7 +17,7 @@ const Navbar = () => {
   ];
 
   return (
-    <Card className="rounded-none">
+    <Card className="rounded-none py-4 fixed top-0 w-full z-10 ">
       <div className="container mx-auto flex justify-between items-center py-2">
         <h1 className="text-xl font-bold">SEAC</h1>
         <div className="flex gap-4 items-center">

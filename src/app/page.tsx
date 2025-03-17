@@ -1,12 +1,23 @@
-import { Card, CardDescription, CardHeader } from "@/components/ui/card";
+import ImageCarousel from "@/components/ImageCarousel";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function Home() {
   return (
-    <Card className="container mx-auto">
-      <CardHeader>Welcome to the South East Asian Club!</CardHeader>
-      <CardDescription>
-        We are a club that celebrates the diverse cultures of South East Asia.
-      </CardDescription>
-    </Card>
+    <div className="container mx-auto flex flex-col items-center gap-4">
+      <Card className="container mx-auto">
+        <CardHeader>
+          <CardTitle>South East Asian Club</CardTitle>
+          <CardDescription>
+            We are a club that celebrates the diverse cultures of South East
+            Asia.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    </div>
   );
 }

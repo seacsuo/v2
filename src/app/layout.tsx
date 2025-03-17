@@ -23,7 +23,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          {children}
+          <main className="py-26">{children}</main>
         </ThemeProvider>
       </body>
     </html>
