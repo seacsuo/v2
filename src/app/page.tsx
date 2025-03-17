@@ -6,17 +6,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import preciousmemoriesvietnam from "@public/landing/preciousmemoriesvietnam.jpg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SquareArrowOutUpRight } from "lucide-react";
+
+const links: { name: string; href: string }[] = [
+  { name: "About", href: "/about" },
+  { name: "Events", href: "/events" },
+  { name: "Merch", href: "/merch" },
+  { name: "Contact", href: "/contact" },
+];
 
 export default function HomePage() {
   return (
     <>
       <div className="relative">
         <Image
-          src={preciousmemoriesvietnam}
+          src="/landing/preciousmemoriesvietnam.jpg"
+          width={1920}
+          height={1080}
           alt="Precious Memories Vietnam"
           className="w-screen h-screen inset-0 object-cover brightness-75"
         />
@@ -93,6 +101,11 @@ export default function HomePage() {
           </CardFooter>
         </Card>
       </div>
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle>Let&apos;s Connect!</CardTitle>
+        </CardHeader>
+      </Card>
     </>
   );
 }
