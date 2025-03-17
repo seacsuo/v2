@@ -55,7 +55,7 @@ const Navbar = () => {
             {/* Links for mobile */}
             <Sheet>
               <SheetTrigger className="flex items-center">
-                <div className="p-2 rounded-lg items-center border bg-primary">
+                <div className="p-2 rounded-lg items-center border bg-primary text-secondary dark:text-secondary-foreground">
                   <Menu />
                 </div>
               </SheetTrigger>
