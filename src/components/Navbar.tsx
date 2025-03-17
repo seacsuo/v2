@@ -1,27 +1,38 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils"; // Ensure you have cn utility from shadcn
 
 const Navbar = () => {
+  const pathname = usePathname();
+
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/events", label: "Events" },
+    { href: "/contact", label: "Contact" },
+  ];
+
   return (
-    <Card className="rounded-none ">
-      <div className="container mx-auto flex justify-between">
+    <Card className="rounded-none">
+      <div className="container mx-auto flex justify-between items-center py-2">
         <h1 className="text-xl font-bold">MySite</h1>
-        <div className="flex gap-4  items-center">
-          <Button variant="link">
-            <Link href="/">Home</Link>
-          </Button>
-          <Button variant="link">
-            <Link href="/about">About</Link>
-          </Button>
-          <Button variant="link">
-            <Link href="/events">Events</Link>
-          </Button>
-          <Button variant="link">
-            <Link href="/contact">Contact</Link>
-          </Button>
+        <div className="flex gap-4 items-center">
+          {links.map((link) => (
+            <Button
+              key={link.href}
+              variant={pathname === link.href ? "default" : "ghost"} // Highlight active link
+              className={cn(
+                "text-sm",
+                pathname === link.href && "font-bold text-primary"
+              )}
+            >
+              <Link href={link.href}>{link.label}</Link>
+            </Button>
+          ))}
           <ModeToggle />
         </div>
       </div>
