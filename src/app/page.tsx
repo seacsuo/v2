@@ -1,5 +1,6 @@
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -8,7 +9,14 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { SquareArrowOutUpRight } from "lucide-react";
+import {
+  History,
+  Calendar,
+  GraduationCap,
+  SquareArrowOutUpRight,
+  Target,
+  Users,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 export default function HomePage() {
@@ -44,9 +52,9 @@ export default function HomePage() {
       </div>
       <div className="border-x container mx-auto h-10 border-dashed"></div>
       <Separator />
-      <Card className="container mx-auto p-4 bg-transparent rounded-none border-y-0 shadow-none">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center  gap-y-4 lg:gap-4 lg:gap-y-0">
-          <Card className="mx-4 lg:mx-0 h-auto lg:h-96">
+      <Card className="container mx-auto p-4 bg-transparent rounded-none border-y-0 shadow-none flex flex-col space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-y-4 lg:gap-4 lg:gap-y-0">
+          <Card className="h-auto lg:h-96">
             <CardHeader>
               <CardTitle className="text-center lg:text-6xl text-2xl">
                 About SEAC
@@ -61,13 +69,7 @@ export default function HomePage() {
               </CardDescription>
             </CardHeader>
             <CardFooter className="flex items-center gap-4 justify-center">
-              <Link href="/about">
-                <Button size="lg" variant={"default"}>
-                  Learn More
-                  <SquareArrowOutUpRight />
-                </Button>
-              </Link>
-              <Link href="/events">
+              <Link href="/merch">
                 <Button size="lg" variant={"default"}>
                   Merch
                   <SquareArrowOutUpRight />
@@ -75,7 +77,7 @@ export default function HomePage() {
               </Link>
             </CardFooter>
           </Card>
-          <Card className="mx-4 lg:mx-0 h-auto lg:h-96 ">
+          <Card className="h-auto lg:h-96 ">
             <CardHeader>
               <CardTitle className="text-center lg:text-6xl text-2xl">
                 SEAC In Kelowna
@@ -90,7 +92,7 @@ export default function HomePage() {
               </CardDescription>
             </CardHeader>
             <CardFooter className="flex items-center gap-4 justify-center">
-              <Link href="/about">
+              <Link href="/seainywl">
                 <Button size="lg" variant={"default"}>
                   Learn More
                   <SquareArrowOutUpRight />
@@ -99,31 +101,108 @@ export default function HomePage() {
             </CardFooter>
           </Card>
         </div>
-      </Card>
-      {/* <Card className="container mx-auto rounded-none border-y shadow-none bg-transparent">
-        <Card className="container w-1/2 mx-auto">
-          <CardHeader className="text-center text-2xl lg:text-6xl">
-            <CardTitle>Let&apos;s Connect!</CardTitle>
+        {/* History Section */}
+        <Card className="shadow-md container mx-auto">
+          <CardHeader className="flex flex-row items-center gap-4">
+            <History className="h-8 w-8 text-primary" />
+            <div>
+              <CardTitle className="text-2xl">History of SEAC</CardTitle>
+              <CardDescription>Our journey through the years</CardDescription>
+            </div>
           </CardHeader>
-          <CardFooter className="flex items-center justify-center gap-4">
-            {links.map(({ icon, href, label }) => (
-              <Link key={label} href={href}>
-                <Button size="lg" variant={"default"}>
-                  <Image
-                    src={icon}
-                    width={24}
-                    height={24}
-                    alt={label}
-                    className="invert-100"
-                  />
-                  {label}
-                </Button>
-              </Link>
-            ))}
-          </CardFooter>
+          <CardContent className="space-y-4">
+            <p>
+              SEAC was founded around a decade ago (we&apos;re digging through
+              the old Facebook account and it may actually be back in 2012!), by
+              students aiming to create a community that is inviting, inclusive,
+              and feels welcoming to all UBCO students!
+            </p>
+            <p>
+              This club has run lots of events in the past ranging from lantern
+              events, scavenger hunts, movie nights, and recently larger social
+              events like galas.
+            </p>
+            <p>
+              Despite the changes in the presence and efforts of SEAC at UBCO,
+              our club has always made it our goal to foster a fun, positive,
+              and welcoming community for all students through various events
+              and initiatives!
+            </p>
+          </CardContent>
         </Card>
-      </Card> 
-      <div className="border-x container mx-auto h-10 border-dashed"></div> */}
+        {/* Goals Section */}
+        <Card className="shadow-md container mx-auto">
+          <CardHeader className="flex flex-row items-center gap-4">
+            <Target className="h-8 w-8 text-primary" />
+            <div>
+              <CardTitle className="text-2xl">Our Goals</CardTitle>
+              <CardDescription>What drives our community</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Goal 1 */}
+              <Card className="border-0 shadow-sm bg-primary/5">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-center mb-2">
+                    <Users className="h-12 w-12 text-primary" />
+                  </div>
+                  <CardTitle className="text-center text-lg">
+                    Community
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center">
+                    Create a strong, connected, and inclusive community for all
+                    students. We aim to provide a safe space for students to
+                    connect with each other and share their experiences
+                    throughout their time at UBCO.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Goal 2 */}
+              <Card className="border-0 shadow-sm bg-primary/5">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-center mb-2">
+                    <Calendar className="h-12 w-12 text-primary" />
+                  </div>
+                  <CardTitle className="text-center text-lg">
+                    Cultural Events
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center">
+                    Provide and facilitate a wide range of events/projects
+                    intertwined with SEA culture to share the SEA experience
+                    with all students at UBCO.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Goal 3 */}
+              <Card className="border-0 shadow-sm bg-primary/5">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-center mb-2">
+                    <GraduationCap className="h-12 w-12 text-primary" />
+                  </div>
+                  <CardTitle className="text-center text-lg">
+                    Education
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center">
+                    Educate students in our community about Southeast Asia and
+                    all that it has to offer; sharing and teaching about the
+                    aspects and perspectives beyond what is often portrayed in
+                    the Western world, if at all included.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+      </Card>
     </>
   );
 }

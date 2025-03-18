@@ -21,7 +21,7 @@ const Navbar = () => {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
+    { href: "/merch", label: "Merch" },
     { href: "/events", label: "Events" },
     { href: "/contact", label: "Contact" },
   ];
@@ -30,10 +30,10 @@ const Navbar = () => {
     <div>
       <Card className="rounded-none py-4 fixed top-0 w-full z-10 px-10">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center flex-row gap-4">
+          <Link href="/" className="flex items-center flex-row gap-4">
             <Image src={seacIcon} width={50} height={50} alt="SEAC Logo" />
             <CardTitle className="text-3xl font-extralight">SEAC</CardTitle>
-          </div>
+          </Link>
           <div className="flex gap-4 items-center">
             {/* Links for desktop */}
             <div className="hidden gap-4 items-center lg:flex">
@@ -61,13 +61,15 @@ const Navbar = () => {
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader className="flex items-center gap-4">
-                  <SheetTitle></SheetTitle>
-                  <Image
-                    src={seacIcon}
-                    width={100}
-                    height={100}
-                    alt="SEAC Logo"
-                  />
+                  <Link href="/">
+                    <SheetTitle></SheetTitle>
+                    <Image
+                      src={seacIcon}
+                      width={100}
+                      height={100}
+                      alt="SEAC Logo"
+                    />
+                  </Link>
                 </SheetHeader>
                 <div className="flex flex-col gap-4 w-1/2 mx-auto justify-center">
                   {links.map((link) => (
