@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { Card, CardTitle } from "@/components/ui/card";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import { Menu } from "lucide-react";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const links = [
     { href: "/", label: "Home" },
@@ -25,6 +27,10 @@ const Navbar = () => {
     { href: "/events", label: "Events" },
     { href: "/contact", label: "Contact" },
   ];
+
+  const handleLinkClick = () => {
+    setIsSheetOpen(false);
+  };
 
   return (
     <div>
@@ -53,7 +59,7 @@ const Navbar = () => {
             </div>
             <ModeToggle />
             {/* Links for mobile */}
-            <Sheet>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger className="flex items-center">
                 <div className="p-2 rounded-lg items-center border bg-primary text-secondary dark:text-secondary-foreground">
                   <Menu />
@@ -61,7 +67,7 @@ const Navbar = () => {
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader className="flex items-center gap-4">
-                  <Link href="/">
+                  <Link href="/" onClick={handleLinkClick}>
                     <SheetTitle></SheetTitle>
                     <Image
                       src={seacIcon}
@@ -82,7 +88,9 @@ const Navbar = () => {
                         pathname === link.href && "font-bold underline"
                       )}
                     >
-                      <Link href={link.href}>{link.label}</Link>
+                      <Link href={link.href} onClick={handleLinkClick}>
+                        {link.label}
+                      </Link>
                     </Button>
                   ))}
                   <div className="flex justify-center">
