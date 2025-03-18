@@ -62,7 +62,7 @@ export default function MerchPage() {
             merchandise! Stay tuned for upcoming merch drops and limited edition
             items.
           </p>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             {merchItems.map((item) => (
               <div
                 key={item.id}
