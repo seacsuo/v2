@@ -16,6 +16,9 @@ import {
   SquareArrowOutUpRight,
   Target,
   Users,
+  MapPin,
+  Info,
+  ShoppingBag,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
@@ -52,49 +55,59 @@ export default function HomePage() {
       </div>
       <div className="border-x container mx-auto h-10 border-dashed"></div>
       <Separator />
-      <Card className="container mx-auto p-4 bg-transparent rounded-none border-y-0 shadow-none flex flex-col space-y-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-y-4 lg:gap-4 lg:gap-y-0">
-          <Card className="h-auto lg:h-96">
+      <Card className="container mx-auto p-4 bg-transparent rounded-none border-y-0 shadow-none flex flex-col gap-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center  gap-y-4 lg:gap-4 lg:gap-y-0">
+          {/* About SEAC */}
+          <Card className="h-auto">
             <CardHeader>
-              <CardTitle className="text-center lg:text-6xl text-2xl">
+              <CardTitle className="text-center text-2xl flex items-center justify-center gap-2">
+                <Users />
                 About SEAC
               </CardTitle>
+              <CardDescription className="text-center text-lg">
+                South East Asian Club (SEAC) is a part of Student Union Okanagan
+                (SUO) at UBC Okanagan. Our mission is to create a vibrant and
+                inclusive community that celebrates, shares, and promotes the
+                rich cultural heritage of Southeast Asia, while fostering an
+                immersive and enriching Southeast Asian experience for all
+                students to enjoy!
+              </CardDescription>
             </CardHeader>
-            <CardContent className="text-center lg:text-2xl text-lg">
-              South East Asian Club (SEAC) is a part of Student Union Okanagan
-              (SUO) at UBC Okanagan. Our mission is to create a vibrant and
-              inclusive community that celebrates, shares, and promotes the rich
-              cultural heritage of Southeast Asia, while fostering an immersive
-              and enriching Southeast Asian experience for all students to
-              enjoy!
-            </CardContent>
             <CardFooter className="flex items-center gap-4 justify-center">
-              <Link href="/merch">
+              <Link href="/about">
                 <Button size="lg" variant={"default"}>
+                  <Info />
+                  Learn More
+                </Button>
+              </Link>
+              <Link href="/events">
+                <Button size="lg" variant={"default"}>
+                  <ShoppingBag />
                   Merch
-                  <SquareArrowOutUpRight />
                 </Button>
               </Link>
             </CardFooter>
           </Card>
-          <Card className="h-auto lg:h-96 ">
+          <Card className="h-auto">
             <CardHeader>
-              <CardTitle className="text-center lg:text-6xl text-2xl">
+              <CardTitle className="text-center text-2xl flex items-center justify-center gap-2">
+                <MapPin />
                 SEAC In Kelowna
               </CardTitle>
+              <CardDescription className="text-center  text-lg">
+                Kelowna is a city located in the Okanagan Valley in the province
+                of British Columbia, Canada. It is a city known for its
+                beautiful landscapes, wineries, and outdoor activities. In
+                Kelowna, you can find many Southeast Asian restaurants, shops,
+                and cultural events that promotes the diverse cultures of
+                Southeast Asia.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="text-center lg:text-2xl text-lg">
-              Kelowna is a city located in the Okanagan Valley in the province
-              of British Columbia, Canada. It is a city known for its beautiful
-              landscapes, wineries, and outdoor activities. In Kelowna, you can
-              find many Southeast Asian restaurants, shops, and cultural events
-              that promotes the diverse cultures of Southeast Asia.
-            </CardContent>
             <CardFooter className="flex items-center gap-4 justify-center">
-              <Link href="/seainywl">
+              <Link href="/about">
                 <Button size="lg" variant={"default"}>
+                  <Info />
                   Learn More
-                  <SquareArrowOutUpRight />
                 </Button>
               </Link>
             </CardFooter>
@@ -141,7 +154,7 @@ export default function HomePage() {
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6">
               {/* Goal 1 */}
-              <Card className="border-0 shadow-sm bg-primary/5">
+              <Card className="border-0 shadow-sm bg-primary/20">
                 <CardHeader className="pb-2">
                   <div className="flex justify-center mb-2">
                     <Users className="h-12 w-12 text-primary" />
@@ -161,7 +174,7 @@ export default function HomePage() {
               </Card>
 
               {/* Goal 2 */}
-              <Card className="border-0 shadow-sm bg-primary/5">
+              <Card className="border-0 shadow-sm bg-primary/20">
                 <CardHeader className="pb-2">
                   <div className="flex justify-center mb-2">
                     <Calendar className="h-12 w-12 text-primary" />
@@ -180,7 +193,7 @@ export default function HomePage() {
               </Card>
 
               {/* Goal 3 */}
-              <Card className="border-0 shadow-sm bg-primary/5">
+              <Card className="border-0 shadow-sm bg-primary/20">
                 <CardHeader className="pb-2">
                   <div className="flex justify-center mb-2">
                     <GraduationCap className="h-12 w-12 text-primary" />
