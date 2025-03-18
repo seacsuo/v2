@@ -24,8 +24,8 @@ export function ModeToggle() {
       onClick={cycleTheme}
       aria-label="Toggle theme"
     >
-      {theme === "light" && <Sun className="h-[1.2rem] w-[1.2rem]" />}
-      {theme === "dark" && <Moon className="h-[1.2rem] w-[1.2rem]" />}
+      {theme === "light" && <Sun />}
+      {theme === "dark" && <Moon />}
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
