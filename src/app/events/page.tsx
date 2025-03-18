@@ -96,7 +96,7 @@ export default function EventsPage() {
 
           <div className="grid gap-6">
             {events.map((event) => (
-              <Card key={event.id}>
+              <Card key={event.id} className="shadow-md bg-primary/10">
                 <CardHeader>
                   <CardTitle className="text-xl">{event.name}</CardTitle>
                   <CardDescription className="text-base mt-2">
