@@ -13,7 +13,6 @@ import {
   History,
   Calendar,
   GraduationCap,
-  SquareArrowOutUpRight,
   Target,
   Users,
   MapPin,

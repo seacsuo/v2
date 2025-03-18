@@ -42,6 +42,11 @@ export default function MerchPage() {
         name: "SEAC Tote Bags",
         status: "Pre-Order",
       },
+      {
+        id: 4,
+        name: "SEAC T-Shirts",
+        status: "Limited Edition",
+      },
     ]);
   }, []);
 
