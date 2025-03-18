@@ -62,41 +62,44 @@ export default function MerchPage() {
             merchandise! Stay tuned for upcoming merch drops and limited edition
             items.
           </p>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
             {merchItems.map((item) => (
-              <div
-                key={item.id}
-                className="bg-muted rounded-lg p-6 text-center"
-              >
-                <div className="relative w-full h-64 max-h-64 max-w-sm mx-auto mb-4 flex justify-center ">
-                  {item.imageLink ? (
-                    <Image
-                      src={item.imageLink}
-                      alt={item.name}
-                      className="rounded-md object-contain w-full h-full bg-background/20"
-                      width={600}
-                      height={300}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center w-full h-full bg-background/20 rounded-md">
-                      <ShoppingBag className="h-16 w-16 text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
-                <h3 className="font-medium text-lg">{item.name}</h3>
-                <p className="text-muted-foreground">{item.status}</p>
-              </div>
+              <Card key={item.id} className="bg-muted text-center gap-y-2">
+                <CardHeader>
+                  <div className="relative w-full h-64 max-h-64 max-w-sm mx-auto flex justify-center ">
+                    {item.imageLink ? (
+                      <Image
+                        src={item.imageLink}
+                        alt={item.name}
+                        className="rounded-md object-contain w-full h-full bg-background/20"
+                        width={600}
+                        height={300}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center w-full h-full bg-background/20 rounded-md">
+                        <ShoppingBag className="h-16 w-16 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <CardTitle>{item.name}</CardTitle>
+                  <CardDescription>{item.status}</CardDescription>
+                </CardHeader>
+
+                <CardFooter>
+                  <Button asChild className="w-full lg:w-1/2 mx-auto">
+                    <Link
+                      href="https://campus.hellorubric.com/?s=7807"
+                      target="_blank"
+                    >
+                      <ShoppingBag />
+                      Shop Merch on Rubric
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         </CardContent>
-        <CardFooter>
-          <Button asChild size="lg" className="w-1/2 mx-auto">
-            <Link href="https://campus.hellorubric.com/?s=7807" target="_blank">
-              <ShoppingBag />
-              Shop Merch on Rubric
-            </Link>
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );

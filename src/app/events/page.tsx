@@ -96,7 +96,7 @@ export default function EventsPage() {
 
           <div className="grid gap-6">
             {events.map((event) => (
-              <Card key={event.id} className="shadow-sm">
+              <Card key={event.id}>
                 <CardHeader>
                   <CardTitle className="text-xl">{event.name}</CardTitle>
                   <CardDescription className="text-base mt-2">
@@ -109,21 +109,21 @@ export default function EventsPage() {
                       variant="outline"
                       className="flex items-center gap-1 py-1.5"
                     >
-                      <Calendar className="h-4 w-4" />
+                      <Calendar />
                       <span>{event.date}</span>
                     </Badge>
                     <Badge
                       variant="outline"
                       className="flex items-center gap-1 py-1.5"
                     >
-                      <Clock className="h-4 w-4" />
+                      <Clock />
                       <span>{event.time}</span>
                     </Badge>
                     <Badge
                       variant="outline"
                       className="flex items-center gap-1 py-1.5"
                     >
-                      <MapPin className="h-4 w-4" />
+                      <MapPin />
                       <span>{event.location}</span>
                     </Badge>
                   </div>

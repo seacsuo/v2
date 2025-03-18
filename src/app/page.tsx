@@ -64,22 +64,19 @@ export default function HomePage() {
                 <Users />
                 About SEAC
               </CardTitle>
-              <CardDescription className="text-center text-lg">
-                South East Asian Club (SEAC) is a part of Student Union Okanagan
-                (SUO) at UBC Okanagan. Our mission is to create a vibrant and
-                inclusive community that celebrates, shares, and promotes the
-                rich cultural heritage of Southeast Asia, while fostering an
-                immersive and enriching Southeast Asian experience for all
-                students to enjoy!
+              <CardDescription className="text-center">
+                Celebrating the diverse cultures of South East Asia
               </CardDescription>
             </CardHeader>
+            <CardContent className="text-center text-lg">
+              South East Asian Club (SEAC) is a part of Student Union Okanagan
+              (SUO) at UBC Okanagan. Our mission is to create a vibrant and
+              inclusive community that celebrates, shares, and promotes the rich
+              cultural heritage of Southeast Asia, while fostering an immersive
+              and enriching Southeast Asian experience for all students to
+              enjoy!
+            </CardContent>
             <CardFooter className="flex items-center gap-4 justify-center">
-              <Link href="/about">
-                <Button size="lg" variant={"default"}>
-                  <Info />
-                  Learn More
-                </Button>
-              </Link>
               <Link href="/events">
                 <Button size="lg" variant={"default"}>
                   <ShoppingBag />
@@ -88,23 +85,27 @@ export default function HomePage() {
               </Link>
             </CardFooter>
           </Card>
+          {/* SEAC in Kelowna */}
           <Card className="h-auto">
             <CardHeader>
               <CardTitle className="text-center text-2xl flex items-center justify-center gap-2">
                 <MapPin />
                 SEAC In Kelowna
               </CardTitle>
-              <CardDescription className="text-center  text-lg">
-                Kelowna is a city located in the Okanagan Valley in the province
-                of British Columbia, Canada. It is a city known for its
-                beautiful landscapes, wineries, and outdoor activities. In
-                Kelowna, you can find many Southeast Asian restaurants, shops,
-                and cultural events that promotes the diverse cultures of
-                Southeast Asia.
+              <CardDescription className="text-center">
+                Discover more of South East Asian culture in Kelowna
               </CardDescription>
             </CardHeader>
+            <CardContent className="text-center  text-lg">
+              Kelowna is a city located in the Okanagan Valley in the province
+              of British Columbia, Canada. It is a city known for its beautiful
+              landscapes, wineries, outdoor activities, with many diverse
+              cultures. In Kelowna, you can find many Southeast Asian
+              restaurants, shops, and cultural events that promotes the diverse
+              cultures of Southeast Asia.
+            </CardContent>
             <CardFooter className="flex items-center gap-4 justify-center">
-              <Link href="/about">
+              <Link href="/seainywl">
                 <Button size="lg" variant={"default"}>
                   <Info />
                   Learn More
