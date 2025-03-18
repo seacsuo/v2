@@ -142,7 +142,7 @@ export default function ContactPage() {
                         {member.name}
                       </CardTitle>
                       <CardDescription className="text-center flex justify-center">
-                        <Badge variant="outline" className="mt-1">
+                        <Badge variant="default" className="mt-1">
                           {member.role}
                         </Badge>
                       </CardDescription>
@@ -150,7 +150,7 @@ export default function ContactPage() {
                     <CardFooter className="pt-2 pb-4 flex justify-center">
                       <Button variant="outline" asChild size="sm">
                         <Link href={`mailto:${member.email}`}>
-                          <Mail className="mr-2 h-4 w-4" />
+                          <Mail />
                           Contact
                         </Link>
                       </Button>
