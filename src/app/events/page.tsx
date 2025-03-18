@@ -131,13 +131,15 @@ export default function EventsPage() {
                 <CardFooter className="flex flex-wrap gap-4">
                   <Button variant="outline" className="flex items-center gap-2">
                     <CalendarPlus className="h-4 w-4" />
-                    <Link href={event.calendarLink || "#"}>
+                    <Link href={event.calendarLink || "#"} target="_blank">
                       Add to Calendar
                     </Link>
                   </Button>
                   <Button className="flex items-center gap-2">
                     <UserPlus className="h-4 w-4" />
-                    <Link href={event.registerLink || "#"}>Register</Link>
+                    <Link href={event.registerLink || "#"} target="_blank">
+                      Register
+                    </Link>
                   </Button>
                 </CardFooter>
               </Card>
