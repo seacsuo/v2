@@ -109,10 +109,10 @@ export default function MerchPage() {
                       <Skeleton className="w-full h-full rounded-md" />
                     </div>
                     <Skeleton className="h-6 w-1/2 mx-auto mt-4" />
-                    <Skeleton className="h-4 w-1/2 mx-auto mt-2" />
+                    <Skeleton className="h-4 w-1/2 mx-auto" />
                   </CardHeader>
                   <CardFooter className="flex justify-center">
-                    <Skeleton className="h-10 w-1/2 mx-auto" />
+                    <Skeleton className="h-8 w-1/2 mx-auto" />
                   </CardFooter>
                 </Card>
               ))
