@@ -102,7 +102,11 @@ const Navbar = () => {
                   ))}
                   <div className="gap-4 flex flex-col items-center justify-center">
                     <ModeToggle />
-                    <LoginDialog iconOnly={false} />
+                    {isLoggedIn ? (
+                      <LogoutDialog />
+                    ) : (
+                      <LoginDialog iconOnly={false} />
+                    )}
                   </div>
                 </div>
               </SheetContent>

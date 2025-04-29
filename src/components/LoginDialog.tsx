@@ -18,6 +18,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast, Toaster } from "sonner";
@@ -88,6 +89,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ iconOnly }) => {
                     <FormControl>
                       <Input placeholder="you@example.com" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -104,6 +106,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ iconOnly }) => {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
