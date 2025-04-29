@@ -92,11 +92,11 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ iconOnly }) => {
                 </FormItem>
               )}
             />
+            <DialogFooter>
+              <Button type="submit">Login</Button>
+            </DialogFooter>
           </form>
         </Form>
-        <DialogFooter>
-          <Button type="submit">Login</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
