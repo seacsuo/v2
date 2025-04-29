@@ -24,6 +24,7 @@ export default function MerchPage() {
       name: string;
       description: string;
       imageLink?: string;
+      link?: string;
     }>
   >([]);
 
@@ -145,11 +146,14 @@ export default function MerchPage() {
                     <CardFooter>
                       <Button asChild className="w-full lg:w-1/2 mx-auto">
                         <Link
-                          href="https://campus.hellorubric.com/?s=7807"
+                          href={
+                            item.link ||
+                            "https://campus.hellorubric.com/?s=7807"
+                          }
                           target="_blank"
                         >
                           <ShoppingBag />
-                          Shop Merch on Rubric
+                          Link
                         </Link>
                       </Button>
                     </CardFooter>
