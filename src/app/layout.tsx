@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/lib/AuthContext";
 
 export const metadata: Metadata = {
   title: "South East Asian Club",
@@ -17,16 +18,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
