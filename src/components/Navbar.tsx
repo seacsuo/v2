@@ -63,7 +63,11 @@ const Navbar = () => {
               ))}
             </div>
             <ModeToggle />
-            {isLoggedIn ? <LogoutDialog /> : <LoginDialog iconOnly={true} />}
+            {isLoggedIn ? (
+              <LogoutDialog iconOnly={true} />
+            ) : (
+              <LoginDialog iconOnly={true} />
+            )}
 
             {/* Links for mobile */}
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>

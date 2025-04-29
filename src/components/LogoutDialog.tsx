@@ -13,7 +13,11 @@ import { useAuth } from "@/lib/AuthContext";
 
 import { toast } from "sonner";
 
-const LogoutDialog = () => {
+interface LogoutDialogProps {
+  iconOnly?: boolean;
+}
+
+const LogoutDialog = ({ iconOnly }: LogoutDialogProps) => {
   const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
@@ -29,16 +33,23 @@ const LogoutDialog = () => {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline">
-            {user?.email?.split("@")[0]}
-            <LogOut />
+          <Button variant="outline" size={iconOnly ? "icon" : "default"}>
+            {iconOnly ? (
+              <LogOut size={20} />
+            ) : (
+              <>
+                {user?.email?.split("@")[0]}
+                <LogOut />
+              </>
+            )}
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-[300px]">
           <DialogHeader>
             <DialogTitle>Logout</DialogTitle>
             <DialogDescription>
-              Are you sure you want to log out?
+              You are currently logged in as <strong>{user?.email}</strong>. Are
+              you sure you want to log out?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
