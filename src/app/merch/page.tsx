@@ -8,10 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag } from "lucide-react";
+import { Loader2, ShoppingBag } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 export default function MerchPage() {
   // Define merch items using state with TypeScript interface
@@ -19,35 +21,63 @@ export default function MerchPage() {
     Array<{
       id: number;
       name: string;
-      status: string;
+      description: string;
       imageLink?: string;
     }>
   >([]);
 
+  const [loading, setLoading] = useState(true);
+
+  const fetchMerchItems = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("merch")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      toast.error("Error fetching merch items: " + error.message);
+      // Fallback Data
+      setMerchItems([
+        {
+          id: 1,
+          name: "SEAC Stickers",
+          description: "Available Now",
+          imageLink:
+            "https://portal.hellorubric.com/assets/uploadedimgs/730e0c03377bb3a8bd015a42bc3fe9c4.png",
+        },
+        {
+          id: 2,
+          name: "SEAC Hoodies",
+          description: "Coming Soon",
+          imageLink:
+            "https://portal.hellorubric.com/assets/uploadedimgs/your-hoodie-image-id.png",
+        },
+        {
+          id: 3,
+          name: "SEAC Tote Bags",
+          description: "Pre-Order",
+          imageLink:
+            "https://portal.hellorubric.com/assets/uploadedimgs/your-tote-image-id.png",
+        },
+        {
+          id: 4,
+          name: "SEAC T-Shirts",
+          description: "Limited Edition",
+          imageLink:
+            "https://portal.hellorubric.com/assets/uploadedimgs/your-tshirt-image-id.png",
+        },
+      ]);
+      setLoading(false);
+    } else {
+      console.log("Fetched merch items:", data);
+      setMerchItems(data);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setMerchItems([
-      {
-        id: 1,
-        name: "SEAC Stickers",
-        status: "Available Now",
-        imageLink: "/merch/stickers.webp",
-      },
-      {
-        id: 2,
-        name: "SEAC Hoodies",
-        status: "Coming Soon",
-      },
-      {
-        id: 3,
-        name: "SEAC Tote Bags",
-        status: "Pre-Order",
-      },
-      {
-        id: 4,
-        name: "SEAC T-Shirts",
-        status: "Limited Edition",
-      },
-    ]);
+    fetchMerchItems();
   }, []);
 
   return (
@@ -67,7 +97,7 @@ export default function MerchPage() {
             merchandise! Stay tuned for upcoming merch drops and limited edition
             items.
           </p>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid lg:grid-cols-2  gap-4">
             {merchItems.map((item) => (
               <Card key={item.id} className="bg-muted text-center gap-y-2">
                 <CardHeader>
@@ -79,6 +109,7 @@ export default function MerchPage() {
                         className="rounded-md object-contain w-full h-full bg-background/20"
                         width={600}
                         height={300}
+                        priority={true}
                       />
                     ) : (
                       <div className="flex items-center justify-center w-full h-full bg-background/20 rounded-md">
@@ -86,8 +117,8 @@ export default function MerchPage() {
                       </div>
                     )}
                   </div>
-                  <CardTitle>{item.name}</CardTitle>
-                  <CardDescription>{item.status}</CardDescription>
+                  <CardTitle className="pt-4">{item.name}</CardTitle>
+                  <CardDescription>{item.description}</CardDescription>
                 </CardHeader>
 
                 <CardFooter>
@@ -104,6 +135,11 @@ export default function MerchPage() {
               </Card>
             ))}
           </div>
+          {loading && (
+            <div className="flex justify-center items-center mt-4">
+              <Loader2 size={50} className="animate-spin text-primary" />
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
