@@ -16,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import LoginDialog from "@/components/LoginDialog";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -58,6 +59,8 @@ const Navbar = () => {
               ))}
             </div>
             <ModeToggle />
+            <LoginDialog iconOnly={true} />
+
             {/* Links for mobile */}
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger className="flex items-center">
@@ -93,8 +96,9 @@ const Navbar = () => {
                       </Link>
                     </Button>
                   ))}
-                  <div className="flex justify-center">
+                  <div className="gap-4 flex flex-col items-center justify-center">
                     <ModeToggle />
+                    <LoginDialog iconOnly={false} />
                   </div>
                 </div>
               </SheetContent>
