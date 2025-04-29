@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MerchPage() {
   // Define merch items using state with TypeScript interface
@@ -97,49 +98,95 @@ export default function MerchPage() {
             merchandise! Stay tuned for upcoming merch drops and limited edition
             items.
           </p>
-          <div className="grid lg:grid-cols-2  gap-4">
-            {merchItems.map((item) => (
-              <Card key={item.id} className="bg-muted text-center gap-y-2">
-                <CardHeader>
-                  <div className="relative w-full h-64 max-h-64 max-w-sm mx-auto flex justify-center ">
-                    {item.imageLink ? (
-                      <Image
-                        src={item.imageLink}
-                        alt={item.name}
-                        className="rounded-md object-contain w-full h-full bg-background/20"
-                        width={600}
-                        height={300}
-                        priority={true}
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center w-full h-full bg-background/20 rounded-md">
-                        <ShoppingBag className="h-16 w-16 text-muted-foreground" />
-                      </div>
-                    )}
-                  </div>
-                  <CardTitle className="pt-4">{item.name}</CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
-                </CardHeader>
 
-                <CardFooter>
-                  <Button asChild className="w-full lg:w-1/2 mx-auto">
-                    <Link
-                      href="https://campus.hellorubric.com/?s=7807"
-                      target="_blank"
+          <div className="grid lg:grid-cols-2 gap-4">
+            {loading ? (
+              // Using shadcn Skeleton components while loading
+              Array.from({ length: 4 }).map((_, index) => (
+                <Card key={`skeleton-${index}`} className="text-center gap-y-2">
+                  <CardHeader>
+                    <div className="relative w-full h-64 max-h-64 max-w-sm mx-auto flex justify-center">
+                      <Skeleton className="w-full h-full rounded-md" />
+                    </div>
+                    <Skeleton className="h-6 w-1/2 mx-auto mt-4" />
+                    <Skeleton className="h-4 w-1/2 mx-auto mt-2" />
+                  </CardHeader>
+                  <CardFooter className="flex justify-center">
+                    <Skeleton className="h-10 w-1/2 mx-auto" />
+                  </CardFooter>
+                </Card>
+              ))
+            ) : (
+              <>
+                {/* Real merch items */}
+                {merchItems.map((item) => (
+                  <Card key={item.id} className="bg-muted text-center gap-y-2">
+                    <CardHeader>
+                      <div className="relative w-full h-64 max-h-64 max-w-sm mx-auto flex justify-center ">
+                        {item.imageLink ? (
+                          <Image
+                            src={item.imageLink}
+                            alt={item.name}
+                            className="rounded-md object-contain w-full h-full bg-background/20"
+                            width={600}
+                            height={300}
+                            priority={true}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center w-full h-full bg-background/20 rounded-md">
+                            <ShoppingBag className="h-16 w-16 text-muted-foreground" />
+                          </div>
+                        )}
+                      </div>
+                      <CardTitle className="pt-4">{item.name}</CardTitle>
+                      <CardDescription>{item.description}</CardDescription>
+                    </CardHeader>
+
+                    <CardFooter>
+                      <Button asChild className="w-full lg:w-1/2 mx-auto">
+                        <Link
+                          href="https://campus.hellorubric.com/?s=7807"
+                          target="_blank"
+                        >
+                          <ShoppingBag />
+                          Shop Merch on Rubric
+                        </Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))}
+
+                {/* Coming soon placeholders when not loading */}
+                {Array.from({ length: Math.max(0, 4 - merchItems.length) }).map(
+                  (_, index) => (
+                    <Card
+                      key={`coming-soon-${index}`}
+                      className="bg-muted text-center gap-y-2 border-dashed"
                     >
-                      <ShoppingBag />
-                      Shop Merch on Rubric
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+                      <CardHeader>
+                        <div className="relative w-full h-64 max-h-64 max-w-sm mx-auto flex justify-center">
+                          <div className="flex items-center justify-center w-full h-full bg-background/20 rounded-md">
+                            <ShoppingBag className="h-16 w-16 text-muted-foreground opacity-50" />
+                          </div>
+                        </div>
+                        <CardTitle className="pt-4">Coming Soon</CardTitle>
+                        <CardDescription>
+                          New merch dropping shortly
+                        </CardDescription>
+                      </CardHeader>
+
+                      <CardFooter>
+                        <Button disabled className="w-full lg:w-1/2 mx-auto">
+                          <ShoppingBag />
+                          Not Available Yet
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  )
+                )}
+              </>
+            )}
           </div>
-          {loading && (
-            <div className="flex justify-center items-center mt-4">
-              <Loader2 size={50} className="animate-spin text-primary" />
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
