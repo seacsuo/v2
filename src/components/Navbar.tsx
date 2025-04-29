@@ -17,10 +17,14 @@ import {
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import LoginDialog from "@/components/LoginDialog";
+import LogoutDialog from "@/components/LogoutDialog";
+import { useAuth } from "@/lib/AuthContext";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const { user } = useAuth();
+  const isLoggedIn = user !== null; // Check if the user is logged in
 
   const links = [
     { href: "/", label: "Home" },
@@ -59,7 +63,7 @@ const Navbar = () => {
               ))}
             </div>
             <ModeToggle />
-            <LoginDialog iconOnly={true} />
+            {isLoggedIn ? <LogoutDialog /> : <LoginDialog iconOnly={true} />}
 
             {/* Links for mobile */}
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
