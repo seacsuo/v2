@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function HomePage() {
   return (
-    <>
+    <div className="animate-fade-in">
       <div className="relative">
         <Image
           src="/landing/preciousmemoriesvietnam.jpg"
@@ -215,6 +215,6 @@ export default function HomePage() {
           </CardContent>
         </Card>
       </Card>
-    </>
+    </div>
   );
 }

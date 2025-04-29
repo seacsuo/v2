@@ -65,7 +65,7 @@ const teamMembers = [
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8 mt-20 items-center flex flex-col justify-center">
+    <div className="container mx-auto px-4 py-8 space-y-8 mt-20 items-center flex flex-col justify-center animate-fade-in">
       <Card className="shadow-md overflow-hidden w-full h-3/4 flex-col justify-between">
         <CardHeader>
           <CardTitle className="text-center text-3xl lg:text-5xl">
