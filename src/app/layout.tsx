@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/lib/AuthContext";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "South East Asian Club",
@@ -28,6 +29,7 @@ export default function RootLayout({
             <Navbar />
             <main>{children}</main>
             <Footer />
+            <Toaster />
           </ThemeProvider>
         </AuthProvider>
       </body>

@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
 
 interface LoginDialogProps {
@@ -117,8 +117,6 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ iconOnly }) => {
           </Form>
         </DialogContent>
       </Dialog>
-
-      <Toaster />
     </>
   );
 };

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 const LogoutDialog = () => {
   const { user, signOut } = useAuth();
@@ -46,7 +46,6 @@ const LogoutDialog = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Toaster />
     </>
   );
 };
