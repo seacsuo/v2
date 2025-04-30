@@ -18,6 +18,7 @@ import {
   MapPin,
   Info,
   ShoppingBag,
+  CalendarSearch,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
@@ -76,10 +77,16 @@ export default function HomePage() {
               enjoy!
             </CardContent>
             <CardFooter className="flex items-center gap-4 justify-center">
-              <Link href="/events">
+              <Link href="/merch">
                 <Button size="lg" variant={"default"}>
                   <ShoppingBag />
                   Merch
+                </Button>
+              </Link>
+              <Link href="/events">
+                <Button size="lg" variant={"default"}>
+                  <CalendarSearch />
+                  Events
                 </Button>
               </Link>
             </CardFooter>

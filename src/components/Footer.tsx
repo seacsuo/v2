@@ -14,7 +14,7 @@ export default function Footer() {
     return date.getFullYear();
   };
   return (
-    <>
+    <div className="animate-fade-in">
       <div className="border-b w-full border-dashed"></div>
       <Card className="text-center rounded-none border-y-0 border-x shadow-none container mx-auto ">
         <CardHeader>
@@ -39,6 +39,6 @@ export default function Footer() {
           </div>
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }

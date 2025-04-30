@@ -9,14 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  CalendarPlus,
-  UserPlus,
-  PartyPopper,
-} from "lucide-react";
+import { Calendar, Clock, MapPin, UserPlus, PartyPopper } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -89,30 +82,32 @@ export default function EventsPage() {
   }
 
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from("event")
-          .select("*")
-          .order("datetime", { ascending: false });
-
-        if (error) {
-          setEvents(RUBRIC_EVENTS_FALLBACK);
-          console.error("Error fetching events:", error.message);
-        } else {
-          setEvents(data);
-          console.log("Fetched events:", data);
-        }
-      } catch (error) {
-        /* swallow errors and fall back */
-        setEvents(RUBRIC_EVENTS_FALLBACK);
-        console.error("Error fetching events:", error);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    fetchEvents();
   }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("event")
+        .select("*")
+        .order("datetime", { ascending: false });
+
+      if (error) {
+        setEvents(RUBRIC_EVENTS_FALLBACK);
+        console.error("Error fetching events:", error.message);
+      } else {
+        setEvents(data);
+        console.log("Fetched events:", data);
+      }
+    } catch (error) {
+      /* swallow errors and fall back */
+      setEvents(RUBRIC_EVENTS_FALLBACK);
+      console.error("Error fetching events:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const formatDate = (dt: string) =>
     new Date(dt).toLocaleDateString(undefined, {
