@@ -16,11 +16,9 @@ import {
   CalendarPlus,
   UserPlus,
   PartyPopper,
-  Loader2,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -30,62 +28,61 @@ type Event = {
   description: string;
   datetime: string; // ISO-8601 timestamp with offset
   location: string;
-  calendarLink?: string;
-  registerLink?: string;
+  link?: string;
 };
 
 const RUBRIC_EVENTS_FALLBACK: Event[] = [
   {
     id: 1,
     title: "Cultural Desert Cafe",
-    description: "",
-    datetime: "2024-10-18T12:00:00-07:00",
-    location: "UBCO, University Way, Kelowna, BC, Canada",
-    calendarLink: "https://campus.hellorubric.com/?s=7807",
-    registerLink: "https://campus.hellorubric.com/?s=7807",
+    description:
+      "We are thrilled to announce that Southeast Asian Club (SEAC) and Singapore International Ice Cream Club (ICC) present Cultural Desert Cafe in the spirit of National Dessert Day!\n\nJoin us for a taste of mouth-watering desserts from across Southeast Asia.\n\nRSVP by October 18, 2024 for FREE!",
+    datetime: "2024-10-18T19:00:00+00:00",
+    location: "UBCO Courtyard",
+    link: "https://campus.hellorubric.com/?s=7807",
   },
-
   {
     id: 2,
     title: "DIY Batik-Inspired Art Night",
-    description: "",
-    datetime: "2024-11-07T18:00:00-07:00",
-    location: "Charles E. Fipke Building, University Way, Kelowna, BC, Canada",
-    calendarLink: "https://campus.hellorubric.com/?s=7807",
-    registerLink: "https://campus.hellorubric.com/?s=7807",
+    description:
+      "Immerse yourself in beautiful batik-inspired patterns and get a free tote bag! 🎨🖌👜\n\nJoin us for a night of creativity and DIY one of SEA traditional crafts—for FREE! Invite your friends and unleash your creativity!\n\nP.S. There will be free pizzas as well 🍕🤫",
+    datetime: "2024-11-08T00:00:00+00:00",
+    location: "FIP 250",
+    link: "https://campus.hellorubric.com/?s=7807",
   },
   {
     id: 3,
     title: "Ramen Movie Night",
-    description: "",
-    datetime: "2025-02-12T17:30:00-07:00",
-    location: "3272 University Way, Kelowna, BC, Canada",
-    calendarLink: "https://campus.hellorubric.com/?s=7807",
-    registerLink: "https://campus.hellorubric.com/?s=7807",
+    description:
+      "Stressed about midterms, the weather, or life in general?? 👀✨️\n\nTake a break and join SEAC for a screening of \"How to Make Millions Before Grandma Dies\"—with FREE ramen and drinks (all halal)! 🍜🎞✨️🚨\n\nHurry and reserve your spot on RUBRIC — first 30 to sign up are guaranteed FREE ramen, so don't miss out!! 🚨\n\nWe'll also be selling our signature SEAC stickers—be sure to check them out!",
+    datetime: "2025-02-13T00:30:00+00:00",
+    location: "FIP 121",
+    link: "https://campus.hellorubric.com/?s=7807",
   },
   {
     id: 4,
     title: "Tropical Rainforest Gala",
-    description: "",
-    datetime: "2025-03-22T18:00:00-07:00",
+    description:
+      "🌿✨ You have been invited to the Tropical Rainforest Gala! ✨🌿\n\nJoin us for one of SEAC’s most unforgettable annual events!\n\nDress to impress in your best or traditional attire and enjoy exotic games like Chapteh from China, Pasikat Piring from Indonesia, and Tumbang Preso from the Philippines.\n\nWhether you played these growing up or are trying them for the first time, come connect, compete, and have fun!",
+    datetime: "2025-03-23T01:00:00+00:00",
     location: "FIP 204",
-    calendarLink: "https://campus.hellorubric.com/?s=7807",
-    registerLink: "https://campus.hellorubric.com/?s=7807",
+    link: "https://campus.hellorubric.com/?s=7807",
   },
   {
     id: 5,
     title: "Cultural Sports Day",
-    description: "",
-    datetime: "2025-03-28T17:30:00-07:00",
-    location: "The Hangar Fitness and Wellness Centre",
-    calendarLink: "https://campus.hellorubric.com/?s=7807",
-    registerLink: "https://campus.hellorubric.com/?s=7807",
+    description:
+      "Gear up for Southeast Asian Club's Cultural Sports Day! Join us for a day of friendly competition, laughter, and nostalgia—FREE FOOD (all halal) and fun, with a chance to win some great prizes!",
+    datetime: "2025-03-29T00:30:00+00:00",
+    location: "The Hangar",
+    link: "https://campus.hellorubric.com/?s=7807",
   },
 ];
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const today = new Date();
 
   useEffect(() => {
     (async () => {
@@ -94,7 +91,7 @@ export default function EventsPage() {
         const { data, error } = await supabase
           .from("event")
           .select("*")
-          .order("datetime", { ascending: true });
+          .order("datetime", { ascending: false });
 
         if (error) {
           setEvents(RUBRIC_EVENTS_FALLBACK);
@@ -174,7 +171,14 @@ export default function EventsPage() {
               : events.map((event) => (
                   <Card key={event.id} className="shadow-md bg-primary/10">
                     <CardHeader>
-                      <CardTitle className="text-xl">{event.title}</CardTitle>
+                      <CardTitle className="text-xl flex justify-between items-center">
+                        <div>{event.title}</div>
+                        <Badge variant="destructive" className="text-sm">
+                          {new Date(event.datetime) < today
+                            ? "Past Event"
+                            : "Upcoming Event"}
+                        </Badge>
+                      </CardTitle>
 
                       <div className="flex flex-wrap gap-3">
                         <Badge
@@ -203,20 +207,10 @@ export default function EventsPage() {
                         {event.description}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent></CardContent>
-                    <CardFooter className="flex flex-wrap gap-4">
-                      <Button
-                        variant="outline"
-                        className="flex items-center gap-2"
-                      >
-                        <CalendarPlus className="h-4 w-4" />
-                        <Link href={event.calendarLink ?? "#"} target="_blank">
-                          Add to Calendar
-                        </Link>
-                      </Button>
+                    <CardFooter>
                       <Button className="flex items-center gap-2">
                         <UserPlus className="h-4 w-4" />
-                        <Link href={event.registerLink ?? "#"} target="_blank">
+                        <Link href={event.link ?? "#"} target="_blank">
                           Register
                         </Link>
                       </Button>
