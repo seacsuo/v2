@@ -84,6 +84,10 @@ export default function EventsPage() {
   const [loading, setLoading] = useState(true);
   const today = new Date();
 
+  function isPastEvent(event: Event): boolean {
+    return new Date(event.datetime) < today;
+  }
+
   useEffect(() => {
     (async () => {
       try {
@@ -171,16 +175,18 @@ export default function EventsPage() {
               : events.map((event) => (
                   <Card key={event.id} className="shadow-md bg-primary/10">
                     <CardHeader>
-                      <CardTitle className="text-xl flex justify-between items-center">
+                      <CardTitle className="text-2xl">
                         <div>{event.title}</div>
-                        <Badge variant="destructive" className="text-sm">
-                          {new Date(event.datetime) < today
-                            ? "Past Event"
-                            : "Upcoming Event"}
-                        </Badge>
                       </CardTitle>
 
                       <div className="flex flex-wrap gap-3">
+                        <Badge
+                          variant={
+                            isPastEvent(event) ? "destructive" : "default"
+                          }
+                        >
+                          {isPastEvent(event) ? "Past Event" : "Upcoming Event"}
+                        </Badge>
                         <Badge
                           variant="outline"
                           className="flex items-center gap-1 py-1.5"
