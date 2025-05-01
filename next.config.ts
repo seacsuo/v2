@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: "portal.hellorubric.com",
         pathname: "/assets/uploadedimgs/**",
       },
+      {
+        protocol: "https",
+        hostname: "cachedresources.hellorubric.com",
+        pathname: "/uploaded_assets/**",
+      },
     ],
   },
 };

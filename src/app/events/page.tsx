@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, MapPin, UserPlus, PartyPopper } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -22,6 +23,7 @@ type Event = {
   datetime: string; // ISO-8601 timestamp with offset
   location: string;
   link?: string;
+  imageLink?: string;
 };
 
 const RUBRIC_EVENTS_FALLBACK: Event[] = [
@@ -33,6 +35,8 @@ const RUBRIC_EVENTS_FALLBACK: Event[] = [
     datetime: "2024-10-18T19:00:00+00:00",
     location: "UBCO Courtyard",
     link: "https://campus.hellorubric.com/?s=7807",
+    imageLink:
+      "https://portal.hellorubric.com/assets/uploadedimgs/df57923f038ef7604e0c3f865be23a7f.jpeg",
   },
   {
     id: 2,
@@ -42,6 +46,8 @@ const RUBRIC_EVENTS_FALLBACK: Event[] = [
     datetime: "2024-11-08T00:00:00+00:00",
     location: "FIP 250",
     link: "https://campus.hellorubric.com/?s=7807",
+    imageLink:
+      "https://portal.hellorubric.com/assets/uploadedimgs/b139e2fcc827f1e56353029f964525d2.png",
   },
   {
     id: 3,
@@ -51,6 +57,8 @@ const RUBRIC_EVENTS_FALLBACK: Event[] = [
     datetime: "2025-02-13T00:30:00+00:00",
     location: "FIP 121",
     link: "https://campus.hellorubric.com/?s=7807",
+    imageLink:
+      "https://cachedresources.hellorubric.com/uploaded_assets/d9a2300d-3df6-48ff-b022-75e969112fde.png",
   },
   {
     id: 4,
@@ -60,6 +68,8 @@ const RUBRIC_EVENTS_FALLBACK: Event[] = [
     datetime: "2025-03-23T01:00:00+00:00",
     location: "FIP 204",
     link: "https://campus.hellorubric.com/?s=7807",
+    imageLink:
+      "https://cachedresources.hellorubric.com/uploaded_assets/fb52ebc5-cb24-4f5e-9862-57470c7f3373.png",
   },
   {
     id: 5,
@@ -69,6 +79,8 @@ const RUBRIC_EVENTS_FALLBACK: Event[] = [
     datetime: "2025-03-29T00:30:00+00:00",
     location: "The Hangar",
     link: "https://campus.hellorubric.com/?s=7807",
+    imageLink:
+      "https://cachedresources.hellorubric.com/uploaded_assets/5006064e-44b5-4bbb-bec7-43c13b2f31d9.jpeg",
   },
 ];
 
@@ -109,6 +121,68 @@ export default function EventsPage() {
     }
   };
 
+  const addEvent = async (event: Event) => {
+    try {
+      const { data, error } = await supabase
+        .from("event")
+        .insert([event])
+        .select("*");
+
+      if (error) {
+        console.error("Error adding event:", error.message);
+      } else {
+        setEvents((prevEvents) => [...prevEvents, ...data]);
+        console.log("Added event:", data);
+      }
+    } catch (error) {
+      console.error("Error adding event:", error);
+    }
+  };
+
+  const deleteEvent = async (eventId: number) => {
+    try {
+      const { data, error } = await supabase
+        .from("event")
+        .delete()
+        .eq("id", eventId)
+        .select("*");
+
+      if (error) {
+        console.error("Error deleting event:", error.message);
+      } else {
+        setEvents((prevEvents) =>
+          prevEvents.filter((event) => event.id !== eventId)
+        );
+        console.log("Deleted event:", data);
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
+  };
+
+  const updateEvent = async (eventId: number, updatedEvent: Event) => {
+    try {
+      const { data, error } = await supabase
+        .from("event")
+        .update(updatedEvent)
+        .eq("id", eventId)
+        .select("*");
+
+      if (error) {
+        console.error("Error updating event:", error.message);
+      } else {
+        setEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event.id === eventId ? { ...event, ...updatedEvent } : event
+          )
+        );
+        console.log("Updated event:", data);
+      }
+    } catch (error) {
+      console.error("Error updating event:", error);
+    }
+  };
+
   const formatDate = (dt: string) =>
     new Date(dt).toLocaleDateString(undefined, {
       month: "long",
@@ -142,10 +216,10 @@ export default function EventsPage() {
             Southeast Asian community and learn about diverse traditions.
           </p>
 
-          <div className="grid gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {loading
               ? // Skeleton loaders for events
-                Array.from({ length: 4 }).map((_, index) => (
+                Array.from({ length: 6 }).map((_, index) => (
                   <Card
                     key={`skeleton-${index}`}
                     className="shadow-md bg-primary/10"
@@ -153,16 +227,16 @@ export default function EventsPage() {
                     <CardHeader>
                       <Skeleton className="h-7 w-3/4 mb-4" />
                       <div className="flex flex-wrap gap-3">
-                        <Skeleton className="h-8 w-40" />
                         <Skeleton className="h-8 w-32" />
-                        <Skeleton className="h-8 w-48" />
+                        <Skeleton className="h-8 w-32" />
+                        <Skeleton className="h-8 w-32" />
+                        <Skeleton className="h-8 w-32" />
                       </div>
+                      <Skeleton className="h-96 w-full mt-4 mb-4 rounded-lg" />
                       <Skeleton className="h-4 w-full mt-3" />
                       <Skeleton className="h-4 w-5/6 mt-2" />
                     </CardHeader>
-                    <CardContent></CardContent>
-                    <CardFooter className="flex flex-wrap gap-4">
-                      <Skeleton className="h-10 w-36" />
+                    <CardFooter>
                       <Skeleton className="h-10 w-32" />
                     </CardFooter>
                   </Card>
@@ -205,6 +279,17 @@ export default function EventsPage() {
                         </Badge>
                       </div>
                       <CardDescription className="text-base">
+                        {event.imageLink && (
+                          <div className="relative w-full h-96 mb-4">
+                            <Image
+                              src={event.imageLink}
+                              alt={event.title}
+                              fill
+                              className="object-cover rounded-lg"
+                              sizes="(max-width: 768px) 100vw, 50vw"
+                            />
+                          </div>
+                        )}
                         {event.description}
                       </CardDescription>
                     </CardHeader>
