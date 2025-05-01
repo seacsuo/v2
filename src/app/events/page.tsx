@@ -9,7 +9,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, UserPlus, PartyPopper } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  UserPlus,
+  PartyPopper,
+  ImageIcon,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -305,14 +312,8 @@ export default function EventsPage() {
                             />
                           </div>
                         ) : (
-                          <div className="flex justify-center mb-4">
-                            <Image
-                              src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                              alt="No image available"
-                              width={600}
-                              height={400}
-                              className="object-cover rounded-lg"
-                            />
+                          <div className="relative w-full h-96 mb-4 flex items-center justify-center bg-muted rounded-lg border border-border">
+                            <ImageIcon className="h-32 w-32 text-muted-foreground/50" />
                           </div>
                         )}
                         {event.description}
