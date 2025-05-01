@@ -17,18 +17,9 @@ import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 import CMSFunctions from "@/components/CMSFunctions";
 import { Separator } from "@/components/ui/separator";
+import { Event } from "@/types";
 
 import { useAuth } from "@/lib/AuthContext";
-
-type Event = {
-  id: number;
-  title: string;
-  description: string;
-  datetime: string; // ISO-8601 timestamp with offset
-  location: string;
-  link?: string;
-  imageLink?: string;
-};
 
 const RUBRIC_EVENTS_FALLBACK: Event[] = [
   {
@@ -92,6 +83,8 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const today = new Date();
+
+  const [eventToModify, setEventToModify] = useState<Event | null>(null);
 
   const { user } = useAuth();
 
@@ -226,7 +219,7 @@ export default function EventsPage() {
 
           {user && (
             <div className="mb-4 flex justify-center">
-              <CMSFunctions contentType="event" />
+              <CMSFunctions contentType="event" eventToModify={eventToModify} />
             </div>
           )}
 

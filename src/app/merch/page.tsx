@@ -18,19 +18,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import CMSFunctions from "@/components/CMSFunctions";
 import { useAuth } from "@/lib/AuthContext";
+import { Merch } from "@/types";
 
 export default function MerchPage() {
   const { user } = useAuth();
   // Define merch items using state with TypeScript interface
-  const [merchItems, setMerchItems] = useState<
-    Array<{
-      id: number;
-      name: string;
-      description: string;
-      imageLink?: string;
-      link?: string;
-    }>
-  >([]);
+  const [merchItems, setMerchItems] = useState<Merch[]>([]);
 
   const [loading, setLoading] = useState(true);
 

@@ -8,12 +8,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
+import { Event, Merch } from "@/types";
 
 export type ModalType = "create" | "edit" | "delete";
 export type ContentType = "event" | "merch";
 
 interface CMSFunctionsProps {
   contentType: ContentType;
+  eventToModify?: Event | null;
+  merchToModify?: Merch | null;
 }
 
 const getDialog = (
