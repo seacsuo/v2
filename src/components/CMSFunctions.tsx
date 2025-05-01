@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { Event, Merch } from "@/types";
+import { Event } from "@/types";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -47,9 +47,10 @@ export type ModalType = "create" | "edit" | "delete";
 export type ContentType = "event" | "merch";
 
 interface CMSFunctionsProps {
-  contentType: ContentType;
-  setEventToModify?: React.Dispatch<React.SetStateAction<Event | null>>;
-  setMerchToModify?: React.Dispatch<React.SetStateAction<Merch | null>>;
+  contentType: ContentType; // Functions to handle add, edit, and delete actions
+  addFunction?: (data: Event) => Promise<void> | void;
+  editFunction?: (id: number, data: Event) => Promise<void> | void;
+  deleteFunction?: (id: number) => Promise<void> | void;
 }
 
 const eventSchema = z.object({
@@ -73,8 +74,9 @@ type MerchFormValues = z.infer<typeof merchSchema>;
 
 export default function CMSFunctions({
   contentType,
-  setEventToModify,
-  setMerchToModify,
+  addFunction,
+  editFunction,
+  deleteFunction,
 }: CMSFunctionsProps) {
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
   const open = (m: ModalType) => () => setActiveModal(m);
@@ -104,20 +106,40 @@ export default function CMSFunctions({
 
   const handleSubmitEvent = () => {
     // turn the form data into a new event or merch object
-    // and call the appropriate function to create or update it
     const formData =
       contentType === "event" ? eventForm.getValues() : merchForm.getValues();
-    const newItem =
-      contentType === "event"
-        ? eventSchema.parse(formData)
-        : merchSchema.parse(formData);
 
-    // Call the function to create or update the item in the database
-    if (contentType === "event" && setEventToModify) {
-      setEventToModify(newItem as Event);
-    } else if (contentType === "merch" && setMerchToModify) {
-      setMerchToModify(newItem as Merch);
+    // Create a proper event/merch object with all required fields
+    if (contentType === "event") {
+      const newEvent = {
+        ...formData,
+        // Convert empty strings to undefined for optional fields
+        link: formData.link || undefined,
+        imageLink: formData.imageLink || undefined,
+      };
+
+      // Directly call the add function instead of setting state
+      if (activeModal === "create" && addFunction) {
+        addFunction(newEvent as Event);
+      }
+    } else if (contentType === "merch") {
+      const newMerch = {
+        ...formData,
+        link: formData.link || undefined,
+        imageLink: formData.imageLink || undefined,
+      };
+      console.log("New Merch:", newMerch);
+
+      // Handle merch similarly...
     }
+
+    // Reset the form
+    if (contentType === "event") {
+      eventForm.reset();
+    } else {
+      merchForm.reset();
+    }
+
     // Close the modal after submission
     close();
   };
@@ -212,17 +234,32 @@ export default function CMSFunctions({
                                 }
                                 onSelect={(date) => {
                                   if (date) {
-                                    const currentDateTime = field.value
-                                      ? new Date(field.value)
-                                      : new Date();
-                                    const newDate = new Date(date);
-                                    newDate.setHours(
-                                      currentDateTime.getHours()
-                                    );
-                                    newDate.setMinutes(
-                                      currentDateTime.getMinutes()
-                                    );
-                                    field.onChange(newDate.toISOString());
+                                    try {
+                                      const currentDateTime = field.value
+                                        ? new Date(field.value)
+                                        : new Date();
+
+                                      // Ensure the date is valid before setting hours/minutes
+                                      const newDate = new Date(date);
+
+                                      // Copy the time from the current value
+                                      newDate.setHours(
+                                        currentDateTime.getHours()
+                                      );
+                                      newDate.setMinutes(
+                                        currentDateTime.getMinutes()
+                                      );
+
+                                      // Verify the date is valid before setting the ISO string
+                                      if (!isNaN(newDate.getTime())) {
+                                        field.onChange(newDate.toISOString());
+                                      }
+                                    } catch (e) {
+                                      // If any error occurs, set today's date as fallback
+                                      const today = new Date();
+                                      field.onChange(today.toISOString());
+                                      console.error("Error setting date:", e);
+                                    }
                                   }
                                 }}
                                 initialFocus
@@ -235,7 +272,8 @@ export default function CMSFunctions({
                             <FormLabel className="text-xs">Hour</FormLabel>
                             <Select
                               value={
-                                field.value
+                                field.value &&
+                                !isNaN(new Date(field.value).getTime())
                                   ? String(
                                       new Date(field.value).getHours() % 12 ||
                                         12
@@ -243,20 +281,32 @@ export default function CMSFunctions({
                                   : "12"
                               }
                               onValueChange={(value) => {
-                                const currentDate = field.value
-                                  ? new Date(field.value)
-                                  : new Date();
-                                const isPM = currentDate.getHours() >= 12;
-                                const hourValue = parseInt(value);
-                                const newHour = isPM
-                                  ? hourValue === 12
-                                    ? 12
-                                    : hourValue + 12
-                                  : hourValue === 12
-                                  ? 0
-                                  : hourValue;
-                                currentDate.setHours(newHour);
-                                field.onChange(currentDate.toISOString());
+                                try {
+                                  const currentDate =
+                                    field.value &&
+                                    !isNaN(new Date(field.value).getTime())
+                                      ? new Date(field.value)
+                                      : new Date();
+
+                                  const isPM = currentDate.getHours() >= 12;
+                                  const hourValue = parseInt(value);
+                                  const newHour = isPM
+                                    ? hourValue === 12
+                                      ? 12
+                                      : hourValue + 12
+                                    : hourValue === 12
+                                    ? 0
+                                    : hourValue;
+
+                                  currentDate.setHours(newHour);
+
+                                  // Verify date is valid before setting value
+                                  if (!isNaN(currentDate.getTime())) {
+                                    field.onChange(currentDate.toISOString());
+                                  }
+                                } catch (e) {
+                                  console.error("Error setting hour:", e);
+                                }
                               }}
                             >
                               <SelectTrigger>

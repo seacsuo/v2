@@ -84,8 +84,6 @@ export default function EventsPage() {
   const [loading, setLoading] = useState(true);
   const today = new Date();
 
-  const [eventToModify, setEventToModify] = useState<Event | null>(null);
-
   const { user } = useAuth();
 
   function isPastEvent(event: Event): boolean {
@@ -95,12 +93,6 @@ export default function EventsPage() {
   useEffect(() => {
     fetchEvents();
   }, []);
-
-  useEffect(() => {
-    if (eventToModify) {
-      console.log("Event to modify:", eventToModify);
-    }
-  }, [eventToModify]);
 
   const fetchEvents = async () => {
     try {
@@ -128,6 +120,7 @@ export default function EventsPage() {
 
   const addEvent = async (event: Event) => {
     try {
+      console.log("Adding event:", event);
       const { data, error } = await supabase
         .from("event")
         .insert([event])
@@ -227,7 +220,9 @@ export default function EventsPage() {
             <div className="mb-4 flex justify-center">
               <CMSFunctions
                 contentType="event"
-                setEventToModify={setEventToModify}
+                addFunction={addEvent}
+                editFunction={updateEvent}
+                deleteFunction={deleteEvent}
               />
             </div>
           )}
@@ -303,15 +298,16 @@ export default function EventsPage() {
                               fill
                               className="object-cover rounded-lg"
                               sizes="(max-width: 768px) 100vw, 50vw"
+                              priority={true}
                             />
                           </div>
                         ) : (
                           <div className="flex justify-center mb-4">
                             <Image
-                              src="/images/no-image.png"
+                              src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
                               alt="No image available"
-                              width={300}
-                              height={300}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 50vw"
                               className="object-cover rounded-lg"
                             />
                           </div>

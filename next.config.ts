@@ -1,18 +1,16 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "portal.hellorubric.com",
-        pathname: "/assets/uploadedimgs/**",
+        hostname: "**",
       },
       {
-        protocol: "https",
-        hostname: "cachedresources.hellorubric.com",
-        pathname: "/uploaded_assets/**",
+        protocol: "http",
+        hostname: "**",
       },
     ],
   },
