@@ -76,9 +76,10 @@ type MerchFormValues = z.infer<typeof merchSchema>;
 export default function CMSFunctions({
   contentType,
   addFunction,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   editFunction,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteFunction,
-  setRefetchEvents,
 }: CMSFunctionsProps) {
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
   const open = (m: ModalType) => () => setActiveModal(m);

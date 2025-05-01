@@ -244,7 +244,6 @@ export default function EventsPage() {
                 addFunction={addEvent}
                 editFunction={updateEvent}
                 deleteFunction={deleteEvent}
-                setRefetchEvents={setRefetchEvents}
               />
             </div>
           )}
