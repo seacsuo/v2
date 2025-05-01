@@ -87,6 +87,7 @@ const RUBRIC_EVENTS_FALLBACK: Event[] = [
 ];
 
 export default function EventsPage() {
+  const [refetchEvents, setRefetchEvents] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const today = new Date();
@@ -100,6 +101,13 @@ export default function EventsPage() {
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    if (refetchEvents) {
+      fetchEvents();
+      setRefetchEvents(false);
+    }
+  }, [refetchEvents]);
 
   const fetchEvents = async () => {
     try {
