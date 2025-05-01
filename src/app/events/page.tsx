@@ -322,7 +322,13 @@ export default function EventsPage() {
                       {event.link && (
                         <Button className="flex items-center gap-2">
                           <UserPlus className="h-4 w-4" />
-                          <Link href={event.link ?? "#"} target="_blank">
+                          <Link
+                            href={
+                              event.link ??
+                              "https://campus.hellorubric.com/?s=7807"
+                            }
+                            target="_blank"
+                          >
                             Register
                           </Link>
                         </Button>
