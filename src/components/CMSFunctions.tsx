@@ -118,6 +118,8 @@ export default function CMSFunctions({
     } else if (contentType === "merch" && setMerchToModify) {
       setMerchToModify(newItem as Merch);
     }
+    // Close the modal after submission
+    close();
   };
 
   const getDialog = (
