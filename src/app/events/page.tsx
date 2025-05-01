@@ -319,12 +319,14 @@ export default function EventsPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardFooter>
-                      <Button className="flex items-center gap-2">
-                        <UserPlus className="h-4 w-4" />
-                        <Link href={event.link ?? "#"} target="_blank">
-                          Register
-                        </Link>
-                      </Button>
+                      {event.link && (
+                        <Button className="flex items-center gap-2">
+                          <UserPlus className="h-4 w-4" />
+                          <Link href={event.link ?? "#"} target="_blank">
+                            Register
+                          </Link>
+                        </Button>
+                      )}
                     </CardFooter>
                   </Card>
                 ))}
