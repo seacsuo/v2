@@ -85,7 +85,6 @@ export default function EventsPage() {
   const today = new Date();
 
   const [eventToModify, setEventToModify] = useState<Event | null>(null);
-  const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
   const { user } = useAuth();
 
@@ -99,14 +98,7 @@ export default function EventsPage() {
 
   useEffect(() => {
     if (eventToModify) {
-      if (eventToModify.id) {
-        // If event has ID, we're editing existing event
-        updateEvent(eventToModify.id, eventToModify);
-      } else {
-        // No ID means new event
-        addEvent(eventToModify);
-      }
-      setEventToModify(null); // Reset after handling
+      console.log("Event to modify:", eventToModify);
     }
   }, [eventToModify]);
 
@@ -236,10 +228,6 @@ export default function EventsPage() {
               <CMSFunctions
                 contentType="event"
                 setEventToModify={setEventToModify}
-                onAddItem={(item) => addEvent(item as Event)}
-                onEditItem={(id, item) => updateEvent(id, item as Event)}
-                onDeleteItem={(id) => deleteEvent(id)}
-                selectedItemId={selectedEventId}
               />
             </div>
           )}
@@ -315,17 +303,16 @@ export default function EventsPage() {
                               fill
                               className="object-cover rounded-lg"
                               sizes="(max-width: 768px) 100vw, 50vw"
-                              priority={true}
                             />
                           </div>
                         ) : (
                           <div className="flex justify-center mb-4">
                             <Image
-                              src="/images/placeholder.png"
-                              alt="Placeholder"
-                              width={600}
+                              src="/images/no-image.png"
+                              alt="No image available"
+                              width={300}
                               height={300}
-                              className="rounded-lg object-cover"
+                              className="object-cover rounded-lg"
                             />
                           </div>
                         )}

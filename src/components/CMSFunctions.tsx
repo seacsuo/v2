@@ -50,10 +50,6 @@ interface CMSFunctionsProps {
   contentType: ContentType;
   setEventToModify?: React.Dispatch<React.SetStateAction<Event | null>>;
   setMerchToModify?: React.Dispatch<React.SetStateAction<Merch | null>>;
-  onAddItem?: (item: Event | Merch) => Promise<void>;
-  onEditItem?: (id: number, item: Event | Merch) => Promise<void>;
-  onDeleteItem?: (id: number) => Promise<void>;
-  selectedItemId?: number | null;
 }
 
 const eventSchema = z.object({
@@ -79,10 +75,6 @@ export default function CMSFunctions({
   contentType,
   setEventToModify,
   setMerchToModify,
-  onAddItem,
-  onEditItem,
-  onDeleteItem,
-  selectedItemId,
 }: CMSFunctionsProps) {
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
   const open = (m: ModalType) => () => setActiveModal(m);
@@ -110,31 +102,24 @@ export default function CMSFunctions({
     },
   });
 
-  const handleSubmitEvent = async () => {
+  const handleSubmitEvent = () => {
+    // turn the form data into a new event or merch object
+    // and call the appropriate function to create or update it
     const formData =
       contentType === "event" ? eventForm.getValues() : merchForm.getValues();
+    const newItem =
+      contentType === "event"
+        ? eventSchema.parse(formData)
+        : merchSchema.parse(formData);
 
-    try {
-      if (activeModal === "create" && onAddItem) {
-        await onAddItem(formData as Event | Merch);
-      } else if (activeModal === "edit" && onEditItem && selectedItemId) {
-        await onEditItem(selectedItemId, formData as Event | Merch);
-      } else if (activeModal === "delete" && onDeleteItem && selectedItemId) {
-        await onDeleteItem(selectedItemId);
-      }
-
-      // Reset forms
-      if (contentType === "event") {
-        eventForm.reset();
-      } else {
-        merchForm.reset();
-      }
-
-      // Close the modal
-      close();
-    } catch (error) {
-      console.error("Error handling item:", error);
+    // Call the function to create or update the item in the database
+    if (contentType === "event" && setEventToModify) {
+      setEventToModify(newItem as Event);
+    } else if (contentType === "merch" && setMerchToModify) {
+      setMerchToModify(newItem as Merch);
     }
+    // Close the modal after submission
+    close();
   };
 
   const getDialog = (
