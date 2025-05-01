@@ -42,6 +42,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 export type ModalType = "create" | "edit" | "delete";
 export type ContentType = "event" | "merch";
@@ -58,8 +59,8 @@ const eventSchema = z.object({
   description: z.string().min(1, "Description is required"),
   datetime: z.string().min(1, "Date and time are required"),
   location: z.string().min(1, "Location is required"),
-  link: z.string().url("Invalid URL").optional(),
-  imageLink: z.string().url("Invalid URL").optional(),
+  link: z.string().url("Invalid URL").optional().or(z.literal("")),
+  imageLink: z.string().url("Invalid URL").optional().or(z.literal("")),
 });
 
 const merchSchema = z.object({
@@ -171,7 +172,7 @@ export default function CMSFunctions({
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel>Title*</FormLabel>
                       <FormControl>
                         <Input placeholder="Event Title" {...field} />
                       </FormControl>
@@ -185,7 +186,7 @@ export default function CMSFunctions({
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>Description*</FormLabel>
                       <FormControl>
                         <Input placeholder="Event Description" {...field} />
                       </FormControl>
@@ -201,7 +202,7 @@ export default function CMSFunctions({
                     <FormItem className="flex flex-col">
                       <div className="flex gap-2">
                         <div className="flex flex-col gap-2 w-1/2">
-                          <FormLabel>Date and Time</FormLabel>
+                          <FormLabel>Date and Time*</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
@@ -269,7 +270,7 @@ export default function CMSFunctions({
                         </div>
                         <div className="flex justify-center gap-1 w-1/2">
                           <div className="grid gap-1">
-                            <FormLabel className="text-xs">Hour</FormLabel>
+                            <FormLabel className="text-xs">Hour*</FormLabel>
                             <Select
                               value={
                                 field.value &&
@@ -322,7 +323,7 @@ export default function CMSFunctions({
                             </Select>
                           </div>
                           <div className="grid gap-1">
-                            <FormLabel className="text-xs">Minute</FormLabel>
+                            <FormLabel className="text-xs">Minute*</FormLabel>
                             <Select
                               value={
                                 field.value
@@ -332,11 +333,28 @@ export default function CMSFunctions({
                                   : "00"
                               }
                               onValueChange={(value) => {
-                                const currentDate = field.value
-                                  ? new Date(field.value)
-                                  : new Date();
-                                currentDate.setMinutes(parseInt(value));
-                                field.onChange(currentDate.toISOString());
+                                try {
+                                  // Ensure we start with a valid date
+                                  let currentDate = field.value
+                                    ? new Date(field.value)
+                                    : new Date();
+
+                                  // If currentDate is invalid, create a new date
+                                  if (isNaN(currentDate.getTime())) {
+                                    currentDate = new Date();
+                                  }
+
+                                  currentDate.setMinutes(parseInt(value));
+
+                                  // Validate before converting to ISO string
+                                  if (!isNaN(currentDate.getTime())) {
+                                    field.onChange(currentDate.toISOString());
+                                  }
+                                } catch (e) {
+                                  console.error("Error setting minutes:", e);
+                                  // Fallback to current time
+                                  field.onChange(new Date().toISOString());
+                                }
                               }}
                             >
                               <SelectTrigger>
@@ -355,7 +373,7 @@ export default function CMSFunctions({
                             </Select>
                           </div>
                           <div className="grid gap-1">
-                            <FormLabel className="text-xs">AM/PM</FormLabel>
+                            <FormLabel className="text-xs">AM/PM*</FormLabel>
                             <Select
                               value={
                                 field.value &&
@@ -404,7 +422,7 @@ export default function CMSFunctions({
                   name="location"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Location</FormLabel>
+                      <FormLabel>Location*</FormLabel>
                       <FormControl>
                         <Input placeholder="Event Location" {...field} />
                       </FormControl>
@@ -473,6 +491,9 @@ export default function CMSFunctions({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Please fill in all required fields marked with *.
+            </DialogDescription>
           </DialogHeader>
           {content}
           <DialogFooter>

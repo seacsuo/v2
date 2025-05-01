@@ -253,7 +253,10 @@ export default function EventsPage() {
                   </Card>
                 ))
               : events.map((event) => (
-                  <Card key={event.id} className="shadow-md bg-primary/10">
+                  <Card
+                    key={event.id}
+                    className="shadow-md bg-primary/10 flex flex-col justify-between"
+                  >
                     <CardHeader>
                       <CardTitle className="text-2xl">
                         <div>{event.title}</div>
@@ -306,8 +309,8 @@ export default function EventsPage() {
                             <Image
                               src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
                               alt="No image available"
-                              fill
-                              sizes="(max-width: 768px) 100vw, 50vw"
+                              width={600}
+                              height={400}
                               className="object-cover rounded-lg"
                             />
                           </div>
