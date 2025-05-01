@@ -96,6 +96,12 @@ export default function EventsPage() {
     fetchEvents();
   }, []);
 
+  useEffect(() => {
+    if (eventToModify) {
+      console.log("Event to modify:", eventToModify);
+    }
+  }, [eventToModify]);
+
   const fetchEvents = async () => {
     try {
       setLoading(true);
@@ -289,7 +295,7 @@ export default function EventsPage() {
                         </Badge>
                       </div>
                       <CardDescription className="text-base">
-                        {event.imageLink && (
+                        {event.imageLink ? (
                           <div className="relative w-full h-96 mb-4">
                             <Image
                               src={event.imageLink}
@@ -297,6 +303,16 @@ export default function EventsPage() {
                               fill
                               className="object-cover rounded-lg"
                               sizes="(max-width: 768px) 100vw, 50vw"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex justify-center mb-4">
+                            <Image
+                              src="/images/no-image.png"
+                              alt="No image available"
+                              width={300}
+                              height={300}
+                              className="object-cover rounded-lg"
                             />
                           </div>
                         )}
