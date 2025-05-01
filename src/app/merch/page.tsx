@@ -15,8 +15,12 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import CMSFunctions from "@/components/CMSFunctions";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function MerchPage() {
+  const { user } = useAuth();
   // Define merch items using state with TypeScript interface
   const [merchItems, setMerchItems] = useState<
     Array<{
@@ -99,6 +103,14 @@ export default function MerchPage() {
             merchandise! Stay tuned for upcoming merch drops and limited edition
             items.
           </p>
+
+          <Separator className="mb-4" />
+
+          {user && (
+            <div className="mb-4 flex justify-center">
+              <CMSFunctions contentType="merch" />
+            </div>
+          )}
 
           <div className="grid lg:grid-cols-2 gap-4">
             {loading ? (

@@ -15,6 +15,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
+import CMSFunctions from "@/components/CMSFunctions";
+import { Separator } from "@/components/ui/separator";
+
+import { useAuth } from "@/lib/AuthContext";
 
 type Event = {
   id: number;
@@ -88,6 +92,8 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const today = new Date();
+
+  const { user } = useAuth();
 
   function isPastEvent(event: Event): boolean {
     return new Date(event.datetime) < today;
@@ -209,12 +215,20 @@ export default function EventsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="mb-6">
+          <div className="mb-4">
             Join us for exciting events that showcase the rich cultural heritage
             of Southeast Asia. From traditional performances to authentic
             cuisine, our events provide opportunities to connect with the
             Southeast Asian community and learn about diverse traditions.
-          </p>
+          </div>
+
+          <Separator className="mb-4" />
+
+          {user && (
+            <div className="mb-4 flex justify-center">
+              <CMSFunctions contentType="event" />
+            </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {loading
