@@ -15,8 +15,8 @@ export type ContentType = "event" | "merch";
 
 interface CMSFunctionsProps {
   contentType: ContentType;
-  eventToModify?: Event | null;
-  merchToModify?: Merch | null;
+  setEventToModify?: React.Dispatch<React.SetStateAction<Event | null>>;
+  setMerchToModify?: React.Dispatch<React.SetStateAction<Merch | null>>;
 }
 
 const getDialog = (

@@ -219,7 +219,10 @@ export default function EventsPage() {
 
           {user && (
             <div className="mb-4 flex justify-center">
-              <CMSFunctions contentType="event" eventToModify={eventToModify} />
+              <CMSFunctions
+                contentType="event"
+                setEventToModify={setEventToModify}
+              />
             </div>
           )}
 
