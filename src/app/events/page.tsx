@@ -27,6 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { Event } from "@/types";
 
 import { useAuth } from "@/lib/AuthContext";
+import { toast } from "sonner";
 
 const RUBRIC_EVENTS_FALLBACK: Event[] = [
   {
@@ -143,12 +144,17 @@ export default function EventsPage() {
 
       if (error) {
         console.error("Error adding event:", error.message);
+        toast.error("Error adding event: " + error.message);
       } else {
         setEvents((prevEvents) => [...prevEvents, ...data]);
+        toast.success("Event added successfully!");
         console.log("Added event:", data);
       }
     } catch (error) {
+      toast.error("Error adding event: " + error);
       console.error("Error adding event:", error);
+    } finally {
+      setRefetchEvents(true);
     }
   };
 
@@ -238,6 +244,7 @@ export default function EventsPage() {
                 addFunction={addEvent}
                 editFunction={updateEvent}
                 deleteFunction={deleteEvent}
+                setRefetchEvents={setRefetchEvents}
               />
             </div>
           )}

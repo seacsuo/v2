@@ -78,6 +78,7 @@ export default function CMSFunctions({
   addFunction,
   editFunction,
   deleteFunction,
+  setRefetchEvents,
 }: CMSFunctionsProps) {
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
   const open = (m: ModalType) => () => setActiveModal(m);
