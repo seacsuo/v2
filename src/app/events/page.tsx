@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
+  Calendar1Icon,
   Clock,
   MapPin,
   UserPlus,
@@ -271,7 +272,6 @@ export default function EventsPage() {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateEvent = async (eventId: number, updatedEvent: Event) => {
     try {
       const { data, error } = await supabase
@@ -722,7 +722,7 @@ export default function EventsPage() {
                           variant="outline"
                           className="flex items-center gap-1 py-1.5"
                         >
-                          <Calendar />
+                          <Calendar1Icon />
                           <span>{formatDate(event.datetime)}</span>
                         </Badge>
                         <Badge
