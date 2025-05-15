@@ -1,10 +1,4 @@
-import {
-  CalendarClock,
-  Edit,
-  Trash2,
-  ShoppingBag,
-  CalendarIcon,
-} from "lucide-react";
+import { CalendarClock, ShoppingBag, CalendarIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import {
@@ -50,8 +44,6 @@ export type ContentType = "event" | "merch";
 interface CMSFunctionsProps {
   contentType: ContentType; // Functions to handle add, edit, and delete actions
   addFunction?: (data: Event) => Promise<void> | void;
-  editFunction?: (id: number, data: Event) => Promise<void> | void;
-  deleteFunction?: (id: number) => Promise<void> | void;
 }
 
 const eventSchema = z.object({
@@ -76,10 +68,6 @@ type MerchFormValues = z.infer<typeof merchSchema>;
 export default function CMSFunctions({
   contentType,
   addFunction,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  editFunction,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  deleteFunction,
 }: CMSFunctionsProps) {
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
   const open = (m: ModalType) => () => setActiveModal(m);
@@ -464,23 +452,11 @@ export default function CMSFunctions({
             </Form>
           </div>
         );
-      } else if (modalType === "edit") {
-        title = "Edit Event";
-        content = <div>Edit event form content goes here</div>;
-      } else if (modalType === "delete") {
-        title = "Delete Event";
-        content = <div>Are you sure you want to delete this event?</div>;
       }
     } else if (contentType === "merch") {
       if (modalType === "create") {
         title = "Create Merch";
         content = <div>Create merch form content goes here</div>;
-      } else if (modalType === "edit") {
-        title = "Edit Merch";
-        content = <div>Edit merch form content goes here</div>;
-      } else if (modalType === "delete") {
-        title = "Delete Merch";
-        content = <div>Are you sure you want to delete this merch?</div>;
       }
     }
 
@@ -525,15 +501,6 @@ export default function CMSFunctions({
   const getCreateButtonText = () => {
     return `Create ${contentType === "event" ? "Event" : "Merch"}`;
   };
-
-  const getEditButtonText = () => {
-    return `Edit ${contentType === "event" ? "Event" : "Merch"}`;
-  };
-
-  const getDeleteButtonText = () => {
-    return `Delete ${contentType === "event" ? "Event" : "Merch"}`;
-  };
-
   return (
     <>
       <div className="flex flex-row gap-4">
@@ -541,19 +508,9 @@ export default function CMSFunctions({
           {getIcon()}
           {getCreateButtonText()}
         </Button>
-        <Button variant="secondary" onClick={open("edit")}>
-          <Edit size={18} />
-          {getEditButtonText()}
-        </Button>
-        <Button variant="destructive" onClick={open("delete")}>
-          <Trash2 size={18} />
-          {getDeleteButtonText()}
-        </Button>
       </div>
 
       {getDialog("create", contentType, activeModal === "create", close)}
-      {getDialog("edit", contentType, activeModal === "edit", close)}
-      {getDialog("delete", contentType, activeModal === "delete", close)}
     </>
   );
 }

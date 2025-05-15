@@ -10,24 +10,73 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Calendar,
   Clock,
   MapPin,
   UserPlus,
   PartyPopper,
   ImageIcon,
+  Trash2,
+  Edit,
+  CalendarClock,
+  CalendarIcon,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
-import CMSFunctions from "@/components/CMSFunctions";
 import { Separator } from "@/components/ui/separator";
 import { Event } from "@/types";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { format } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 import { useAuth } from "@/lib/AuthContext";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const RUBRIC_EVENTS_FALLBACK: Event[] = [
   {
@@ -91,9 +140,52 @@ export default function EventsPage() {
   const [refetchEvents, setRefetchEvents] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [eventToDelete, setEventToDelete] = useState<number | null>(null);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const today = new Date();
 
   const { user } = useAuth();
+
+  // Event schema for form validation
+  const eventSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    description: z.string().min(1, "Description is required"),
+    datetime: z.string().min(1, "Date and time are required"),
+    location: z.string().min(1, "Location is required"),
+    link: z.string().url("Invalid URL").optional().or(z.literal("")),
+    imageLink: z.string().url("Invalid URL").optional().or(z.literal("")),
+  });
+
+  // Form setup with React Hook Form
+  const eventForm = useForm<z.infer<typeof eventSchema>>({
+    resolver: zodResolver(eventSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      datetime: new Date().toISOString(),
+      location: "",
+      link: "",
+      imageLink: "",
+    },
+  });
+
+  // Function to handle form submission
+  const handleCreateEventSubmit = (values: z.infer<typeof eventSchema>) => {
+    // Create a proper event object
+    const newEvent = {
+      ...values,
+      // Convert empty strings to undefined for optional fields
+      link: values.link || undefined,
+      imageLink: values.imageLink || undefined,
+    };
+
+    // Call the existing addEvent function
+    addEvent(newEvent as Event);
+
+    // Reset form and close dialog
+    eventForm.reset();
+    setIsCreateDialogOpen(false);
+  };
 
   function isPastEvent(event: Event): boolean {
     return new Date(event.datetime) < today;
@@ -179,6 +271,7 @@ export default function EventsPage() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateEvent = async (eventId: number, updatedEvent: Event) => {
     try {
       const { data, error } = await supabase
@@ -239,14 +332,348 @@ export default function EventsPage() {
 
           {user && (
             <div className="mb-4 flex justify-center">
-              <CMSFunctions
-                contentType="event"
-                addFunction={addEvent}
-                editFunction={updateEvent}
-                deleteFunction={deleteEvent}
-              />
+              <Button
+                variant="default"
+                onClick={() => setIsCreateDialogOpen(true)}
+              >
+                <CalendarClock size={18} />
+                Create Event
+              </Button>
             </div>
           )}
+
+          {/* Create Event Dialog */}
+          <Dialog
+            open={isCreateDialogOpen}
+            onOpenChange={setIsCreateDialogOpen}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create Event</DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground">
+                  Please fill in all required fields marked with *.
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...eventForm}>
+                <form
+                  id="create-event-form"
+                  onSubmit={eventForm.handleSubmit(handleCreateEventSubmit)}
+                  className="space-y-4"
+                >
+                  {/* Title */}
+                  <FormField
+                    control={eventForm.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Event Title" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* Description */}
+                  <FormField
+                    control={eventForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Event Description" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* Date and Time Picker */}
+                  <FormField
+                    control={eventForm.control}
+                    name="datetime"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <div className="flex gap-2">
+                          <div className="flex flex-col gap-2 w-1/2">
+                            <FormLabel>Date and Time*</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                      "text-left font-normal",
+                                      !field.value && "text-muted-foreground"
+                                    )}
+                                  >
+                                    {field.value ? (
+                                      format(new Date(field.value), "PPP")
+                                    ) : (
+                                      <span>Pick a date</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
+                                <Calendar
+                                  mode="single"
+                                  selected={
+                                    field.value
+                                      ? new Date(field.value)
+                                      : undefined
+                                  }
+                                  onSelect={(date) => {
+                                    if (date) {
+                                      try {
+                                        const currentDateTime = field.value
+                                          ? new Date(field.value)
+                                          : new Date();
+
+                                        // Ensure the date is valid before setting hours/minutes
+                                        const newDate = new Date(date);
+
+                                        // Copy the time from the current value
+                                        newDate.setHours(
+                                          currentDateTime.getHours()
+                                        );
+                                        newDate.setMinutes(
+                                          currentDateTime.getMinutes()
+                                        );
+
+                                        // Verify the date is valid before setting the ISO string
+                                        if (!isNaN(newDate.getTime())) {
+                                          field.onChange(newDate.toISOString());
+                                        }
+                                      } catch (e) {
+                                        // If any error occurs, set today's date as fallback
+                                        const today = new Date();
+                                        field.onChange(today.toISOString());
+                                        console.error("Error setting date:", e);
+                                      }
+                                    }
+                                  }}
+                                  initialFocus
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          <div className="flex justify-center gap-1 w-1/2">
+                            <div className="grid gap-1">
+                              <FormLabel className="text-xs">Hour*</FormLabel>
+                              <Select
+                                value={
+                                  field.value &&
+                                  !isNaN(new Date(field.value).getTime())
+                                    ? String(
+                                        new Date(field.value).getHours() % 12 ||
+                                          12
+                                      )
+                                    : "12"
+                                }
+                                onValueChange={(value) => {
+                                  try {
+                                    const currentDate =
+                                      field.value &&
+                                      !isNaN(new Date(field.value).getTime())
+                                        ? new Date(field.value)
+                                        : new Date();
+
+                                    const isPM = currentDate.getHours() >= 12;
+                                    const hourValue = parseInt(value);
+                                    const newHour = isPM
+                                      ? hourValue === 12
+                                        ? 12
+                                        : hourValue + 12
+                                      : hourValue === 12
+                                      ? 0
+                                      : hourValue;
+
+                                    currentDate.setHours(newHour);
+
+                                    // Verify date is valid before setting value
+                                    if (!isNaN(currentDate.getTime())) {
+                                      field.onChange(currentDate.toISOString());
+                                    }
+                                  } catch (e) {
+                                    console.error("Error setting hour:", e);
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Hour" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {[...Array(12)].map((_, i) => (
+                                    <SelectItem key={i} value={String(i + 1)}>
+                                      {i + 1}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="grid gap-1">
+                              <FormLabel className="text-xs">Minute*</FormLabel>
+                              <Select
+                                value={
+                                  field.value
+                                    ? String(
+                                        new Date(field.value).getMinutes()
+                                      ).padStart(2, "0")
+                                    : "00"
+                                }
+                                onValueChange={(value) => {
+                                  try {
+                                    // Ensure we start with a valid date
+                                    let currentDate = field.value
+                                      ? new Date(field.value)
+                                      : new Date();
+
+                                    // If currentDate is invalid, create a new date
+                                    if (isNaN(currentDate.getTime())) {
+                                      currentDate = new Date();
+                                    }
+
+                                    currentDate.setMinutes(parseInt(value));
+
+                                    // Validate before converting to ISO string
+                                    if (!isNaN(currentDate.getTime())) {
+                                      field.onChange(currentDate.toISOString());
+                                    }
+                                  } catch (e) {
+                                    console.error("Error setting minutes:", e);
+                                    // Fallback to current time
+                                    field.onChange(new Date().toISOString());
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Minute" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {[...Array(4)].map((_, i) => (
+                                    <SelectItem
+                                      key={i}
+                                      value={String(i * 15).padStart(2, "0")}
+                                    >
+                                      {String(i * 15).padStart(2, "0")}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="grid gap-1">
+                              <FormLabel className="text-xs">AM/PM*</FormLabel>
+                              <Select
+                                value={
+                                  field.value &&
+                                  new Date(field.value).getHours() >= 12
+                                    ? "PM"
+                                    : "AM"
+                                }
+                                onValueChange={(value) => {
+                                  const currentDate = field.value
+                                    ? new Date(field.value)
+                                    : new Date();
+                                  const currentHour = currentDate.getHours();
+                                  const is12Hour = currentHour % 12 === 0;
+
+                                  if (value === "AM" && currentHour >= 12) {
+                                    currentDate.setHours(
+                                      is12Hour ? 0 : currentHour - 12
+                                    );
+                                  } else if (
+                                    value === "PM" &&
+                                    currentHour < 12
+                                  ) {
+                                    currentDate.setHours(
+                                      is12Hour ? 12 : currentHour + 12
+                                    );
+                                  }
+
+                                  field.onChange(currentDate.toISOString());
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="AM/PM" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="AM">AM</SelectItem>
+                                  <SelectItem value="PM">PM</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* Location */}
+                  <FormField
+                    control={eventForm.control}
+                    name="location"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Location*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Event Location" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* Link */}
+                  <FormField
+                    control={eventForm.control}
+                    name="link"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Link</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Event Link" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* Image Link */}
+                  <FormField
+                    control={eventForm.control}
+                    name="imageLink"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Image Link</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Event Image Link" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </form>
+              </Form>
+              <DialogFooter>
+                <Button
+                  variant="secondary"
+                  onClick={() => setIsCreateDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="default"
+                  type="submit"
+                  form="create-event-form"
+                >
+                  Create Event
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {loading
@@ -279,7 +706,7 @@ export default function EventsPage() {
                     className="shadow-md bg-primary/10 flex flex-col justify-between"
                   >
                     <CardHeader>
-                      <CardTitle className="text-2xl">
+                      <CardTitle className="flex gap-2 text-2xl">
                         <div>{event.title}</div>
                       </CardTitle>
 
@@ -333,7 +760,7 @@ export default function EventsPage() {
                         {event.description}
                       </CardDescription>
                     </CardHeader>
-                    <CardFooter>
+                    <CardFooter className="flex gap-2 justify-between items-center">
                       {event.link && (
                         <Button className="flex items-center gap-2">
                           <UserPlus className="h-4 w-4" />
@@ -347,6 +774,61 @@ export default function EventsPage() {
                             Register
                           </Link>
                         </Button>
+                      )}
+                      {user && (
+                        <div className="flex gap-2">
+                          <AlertDialog
+                            open={eventToDelete === event.id}
+                            onOpenChange={(open) =>
+                              !open && setEventToDelete(null)
+                            }
+                          >
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="destructive"
+                                size={"icon"}
+                                onClick={() => setEventToDelete(event.id)}
+                              >
+                                <Trash2 />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete Event
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete &quot;
+                                  {event.title}&quot;? This action cannot be
+                                  undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => {
+                                    deleteEvent(event.id);
+                                    setEventToDelete(null);
+                                    toast.success(
+                                      "Event deleted successfully!"
+                                    );
+                                    setRefetchEvents(true);
+                                  }}
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button size={"icon"}>
+                                <Edit />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]"></DialogContent>
+                          </Dialog>
+                        </div>
                       )}
                     </CardFooter>
                   </Card>
