@@ -131,7 +131,7 @@ export default function MerchPage() {
     const { data, error } = await supabase
       .from("merch")
       .select("*")
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (error) {
       toast.error("Error fetching merch items: " + error.message);
