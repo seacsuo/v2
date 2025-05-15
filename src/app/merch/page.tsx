@@ -16,11 +16,11 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import CMSFunctions from "@/components/CMSFunctions";
 import { useAuth } from "@/lib/AuthContext";
 import { Merch } from "@/types";
 
 export default function MerchPage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user } = useAuth();
   // Define merch items using state with TypeScript interface
   const [merchItems, setMerchItems] = useState<Merch[]>([]);
@@ -98,12 +98,6 @@ export default function MerchPage() {
           </p>
 
           <Separator className="mb-4" />
-
-          {user && (
-            <div className="mb-4 flex justify-center">
-              <CMSFunctions contentType="merch" />
-            </div>
-          )}
 
           <div className="grid lg:grid-cols-2 gap-4">
             {loading ? (
