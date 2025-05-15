@@ -822,11 +822,465 @@ export default function EventsPage() {
                           </AlertDialog>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Button size={"icon"}>
+                              <Button
+                                size={"icon"}
+                                onClick={() => {
+                                  // Pre-fill the form with event data when dialog opens
+                                  eventForm.reset({
+                                    title: event.title,
+                                    description: event.description,
+                                    datetime: event.datetime,
+                                    location: event.location,
+                                    link: event.link || "",
+                                    imageLink: event.imageLink || "",
+                                  });
+                                }}
+                              >
                                 <Edit />
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px]"></DialogContent>
+                            <DialogContent className="sm:max-w-[425px]">
+                              <DialogHeader>
+                                <DialogTitle>Edit Event</DialogTitle>
+                                <DialogDescription className="text-sm text-muted-foreground">
+                                  Update event details below.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <Form {...eventForm}>
+                                <form
+                                  id="edit-event-form"
+                                  onSubmit={(e) => {
+                                    e.preventDefault();
+                                    const formData = eventForm.getValues();
+                                    updateEvent(event.id, formData as Event);
+                                    toast.success(
+                                      "Event updated successfully!"
+                                    );
+                                    setRefetchEvents(true);
+                                  }}
+                                  className="space-y-4"
+                                >
+                                  {/* Title */}
+                                  <FormField
+                                    control={eventForm.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Title*</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            placeholder="Event Title"
+                                            defaultValue={event.title}
+                                            {...field}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  {/* Description */}
+                                  <FormField
+                                    control={eventForm.control}
+                                    name="description"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Description*</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            placeholder="Event Description"
+                                            defaultValue={event.description}
+                                            {...field}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  {/* Date and Time Picker */}
+                                  <FormField
+                                    control={eventForm.control}
+                                    name="datetime"
+                                    render={({ field }) => (
+                                      <FormItem className="flex flex-col">
+                                        <div className="flex gap-2">
+                                          <div className="flex flex-col gap-2 w-1/2">
+                                            <FormLabel>
+                                              Date and Time*
+                                            </FormLabel>
+                                            <Popover>
+                                              <PopoverTrigger asChild>
+                                                <FormControl>
+                                                  <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                      "text-left font-normal",
+                                                      !field.value &&
+                                                        "text-muted-foreground"
+                                                    )}
+                                                  >
+                                                    {field.value
+                                                      ? format(
+                                                          new Date(field.value),
+                                                          "PPP"
+                                                        )
+                                                      : format(
+                                                          new Date(
+                                                            event.datetime
+                                                          ),
+                                                          "PPP"
+                                                        )}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                  </Button>
+                                                </FormControl>
+                                              </PopoverTrigger>
+                                              <PopoverContent
+                                                className="w-auto p-0"
+                                                align="start"
+                                              >
+                                                <Calendar
+                                                  mode="single"
+                                                  selected={
+                                                    field.value
+                                                      ? new Date(field.value)
+                                                      : new Date(event.datetime)
+                                                  }
+                                                  onSelect={(date) => {
+                                                    if (date) {
+                                                      try {
+                                                        const currentDateTime =
+                                                          field.value
+                                                            ? new Date(
+                                                                field.value
+                                                              )
+                                                            : new Date(
+                                                                event.datetime
+                                                              );
+
+                                                        // Ensure the date is valid before setting hours/minutes
+                                                        const newDate =
+                                                          new Date(date);
+
+                                                        // Copy the time from the current value
+                                                        newDate.setHours(
+                                                          currentDateTime.getHours()
+                                                        );
+                                                        newDate.setMinutes(
+                                                          currentDateTime.getMinutes()
+                                                        );
+
+                                                        // Verify the date is valid before setting the ISO string
+                                                        if (
+                                                          !isNaN(
+                                                            newDate.getTime()
+                                                          )
+                                                        ) {
+                                                          field.onChange(
+                                                            newDate.toISOString()
+                                                          );
+                                                        }
+                                                      } catch (e) {
+                                                        // If any error occurs, set today's date as fallback
+                                                        const today =
+                                                          new Date();
+                                                        field.onChange(
+                                                          today.toISOString()
+                                                        );
+                                                        console.error(
+                                                          "Error setting date:",
+                                                          e
+                                                        );
+                                                      }
+                                                    }
+                                                  }}
+                                                  initialFocus
+                                                />
+                                              </PopoverContent>
+                                            </Popover>
+                                          </div>
+                                          <div className="flex justify-center gap-1 w-1/2">
+                                            <div className="grid gap-1">
+                                              <FormLabel className="text-xs">
+                                                Hour*
+                                              </FormLabel>
+                                              <Select
+                                                defaultValue={String(
+                                                  new Date(
+                                                    event.datetime
+                                                  ).getHours() % 12 || 12
+                                                )}
+                                                onValueChange={(value) => {
+                                                  try {
+                                                    const currentDate =
+                                                      field.value
+                                                        ? new Date(field.value)
+                                                        : new Date(
+                                                            event.datetime
+                                                          );
+
+                                                    const isPM =
+                                                      currentDate.getHours() >=
+                                                      12;
+                                                    const hourValue =
+                                                      parseInt(value);
+                                                    const newHour = isPM
+                                                      ? hourValue === 12
+                                                        ? 12
+                                                        : hourValue + 12
+                                                      : hourValue === 12
+                                                      ? 0
+                                                      : hourValue;
+
+                                                    currentDate.setHours(
+                                                      newHour
+                                                    );
+
+                                                    // Verify date is valid before setting value
+                                                    if (
+                                                      !isNaN(
+                                                        currentDate.getTime()
+                                                      )
+                                                    ) {
+                                                      field.onChange(
+                                                        currentDate.toISOString()
+                                                      );
+                                                    }
+                                                  } catch (e) {
+                                                    console.error(
+                                                      "Error setting hour:",
+                                                      e
+                                                    );
+                                                  }
+                                                }}
+                                              >
+                                                <SelectTrigger>
+                                                  <SelectValue placeholder="Hour" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                  {[...Array(12)].map(
+                                                    (_, i) => (
+                                                      <SelectItem
+                                                        key={i}
+                                                        value={String(i + 1)}
+                                                      >
+                                                        {i + 1}
+                                                      </SelectItem>
+                                                    )
+                                                  )}
+                                                </SelectContent>
+                                              </Select>
+                                            </div>
+                                            <div className="grid gap-1">
+                                              <FormLabel className="text-xs">
+                                                Minute*
+                                              </FormLabel>
+                                              <Select
+                                                defaultValue={String(
+                                                  new Date(
+                                                    event.datetime
+                                                  ).getMinutes()
+                                                ).padStart(2, "0")}
+                                                onValueChange={(value) => {
+                                                  try {
+                                                    // Ensure we start with a valid date
+                                                    let currentDate =
+                                                      field.value
+                                                        ? new Date(field.value)
+                                                        : new Date(
+                                                            event.datetime
+                                                          );
+
+                                                    // If currentDate is invalid, create a new date
+                                                    if (
+                                                      isNaN(
+                                                        currentDate.getTime()
+                                                      )
+                                                    ) {
+                                                      currentDate = new Date();
+                                                    }
+
+                                                    currentDate.setMinutes(
+                                                      parseInt(value)
+                                                    );
+
+                                                    // Validate before converting to ISO string
+                                                    if (
+                                                      !isNaN(
+                                                        currentDate.getTime()
+                                                      )
+                                                    ) {
+                                                      field.onChange(
+                                                        currentDate.toISOString()
+                                                      );
+                                                    }
+                                                  } catch (e) {
+                                                    console.error(
+                                                      "Error setting minutes:",
+                                                      e
+                                                    );
+                                                    // Fallback to current time
+                                                    field.onChange(
+                                                      new Date().toISOString()
+                                                    );
+                                                  }
+                                                }}
+                                              >
+                                                <SelectTrigger>
+                                                  <SelectValue placeholder="Minute" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                  {[...Array(4)].map((_, i) => (
+                                                    <SelectItem
+                                                      key={i}
+                                                      value={String(
+                                                        i * 15
+                                                      ).padStart(2, "0")}
+                                                    >
+                                                      {String(i * 15).padStart(
+                                                        2,
+                                                        "0"
+                                                      )}
+                                                    </SelectItem>
+                                                  ))}
+                                                </SelectContent>
+                                              </Select>
+                                            </div>
+                                            <div className="grid gap-1">
+                                              <FormLabel className="text-xs">
+                                                AM/PM*
+                                              </FormLabel>
+                                              <Select
+                                                defaultValue={
+                                                  new Date(
+                                                    event.datetime
+                                                  ).getHours() >= 12
+                                                    ? "PM"
+                                                    : "AM"
+                                                }
+                                                onValueChange={(value) => {
+                                                  const currentDate =
+                                                    field.value
+                                                      ? new Date(field.value)
+                                                      : new Date(
+                                                          event.datetime
+                                                        );
+                                                  const currentHour =
+                                                    currentDate.getHours();
+                                                  const is12Hour =
+                                                    currentHour % 12 === 0;
+
+                                                  if (
+                                                    value === "AM" &&
+                                                    currentHour >= 12
+                                                  ) {
+                                                    currentDate.setHours(
+                                                      is12Hour
+                                                        ? 0
+                                                        : currentHour - 12
+                                                    );
+                                                  } else if (
+                                                    value === "PM" &&
+                                                    currentHour < 12
+                                                  ) {
+                                                    currentDate.setHours(
+                                                      is12Hour
+                                                        ? 12
+                                                        : currentHour + 12
+                                                    );
+                                                  }
+
+                                                  field.onChange(
+                                                    currentDate.toISOString()
+                                                  );
+                                                }}
+                                              >
+                                                <SelectTrigger>
+                                                  <SelectValue placeholder="AM/PM" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                  <SelectItem value="AM">
+                                                    AM
+                                                  </SelectItem>
+                                                  <SelectItem value="PM">
+                                                    PM
+                                                  </SelectItem>
+                                                </SelectContent>
+                                              </Select>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  {/* Location */}
+                                  <FormField
+                                    control={eventForm.control}
+                                    name="location"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Location*</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            placeholder="Event Location"
+                                            defaultValue={event.location}
+                                            {...field}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  {/* Link */}
+                                  <FormField
+                                    control={eventForm.control}
+                                    name="link"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Link</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            placeholder="Event Link"
+                                            defaultValue={event.link || ""}
+                                            {...field}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  {/* Image Link */}
+                                  <FormField
+                                    control={eventForm.control}
+                                    name="imageLink"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Image Link</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            placeholder="Event Image Link"
+                                            defaultValue={event.imageLink || ""}
+                                            {...field}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </form>
+                              </Form>
+                              <DialogFooter>
+                                <Button variant="secondary" type="button">
+                                  Cancel
+                                </Button>
+                                <Button
+                                  variant="default"
+                                  type="submit"
+                                  form="edit-event-form"
+                                >
+                                  Update Event
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
                           </Dialog>
                         </div>
                       )}
