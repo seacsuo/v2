@@ -19,7 +19,6 @@ import {
   Trash2,
   Edit,
   CalendarClock,
-  CalendarIcon,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -28,7 +27,6 @@ import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Event } from "@/types";
-import { Calendar } from "@/components/ui/calendar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,17 +41,14 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
 
 import { useAuth } from "@/lib/AuthContext";
 import { toast } from "sonner";
-import { format } from "date-fns";
 import EventForm from "@/components/EventForm";
 
 const RUBRIC_EVENTS_FALLBACK: Event[] = [
@@ -114,6 +109,15 @@ const RUBRIC_EVENTS_FALLBACK: Event[] = [
   },
 ];
 
+type EventFormValues = {
+  title: string;
+  description: string;
+  datetime: string;
+  location: string;
+  link?: string;
+  imageLink?: string;
+};
+
 export default function EventsPage() {
   const [refetchEvents, setRefetchEvents] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
@@ -124,7 +128,7 @@ export default function EventsPage() {
 
   const { user } = useAuth();
 
-  const handleCreateEventSubmit = (values: any) => {
+  const handleCreateEventSubmit = (values: EventFormValues) => {
     // Create a proper event object
     const newEvent = {
       ...values,
@@ -140,18 +144,19 @@ export default function EventsPage() {
     setIsCreateDialogOpen(false);
   };
 
-  const handleUpdateEventSubmit = (eventId: number) => (values: any) => {
-    const updatedEvent = {
-      ...values,
-      // Convert empty strings to undefined for optional fields
-      link: values.link || undefined,
-      imageLink: values.imageLink || undefined,
-    };
+  const handleUpdateEventSubmit =
+    (eventId: number) => (values: EventFormValues) => {
+      const updatedEvent = {
+        ...values,
+        // Convert empty strings to undefined for optional fields
+        link: values.link || undefined,
+        imageLink: values.imageLink || undefined,
+      };
 
-    updateEvent(eventId, updatedEvent as Event);
-    toast.success("Event updated successfully!");
-    setRefetchEvents(true);
-  };
+      updateEvent(eventId, updatedEvent as Event);
+      toast.success("Event updated successfully!");
+      setRefetchEvents(true);
+    };
 
   function isPastEvent(event: Event): boolean {
     return new Date(event.datetime) < today;
